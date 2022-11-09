@@ -22,12 +22,12 @@ def get_shot_path( shot ):
 
     Parameters
     ----------
-    shot: int
+    shot : int
         Shot number
 
     Returns
     -------
-    shot_path: str
+    str
         Full path to shot folder, returns errValue (-1) if not found
     """
 
@@ -66,12 +66,12 @@ def get_gas( shot ):
 
     Parameters
     ----------
-    shot: int
+    shot : int
         Shot number
 
     Returns
     -------
-    gas: str
+    str
         Gas abbreviated as in the periodic table of the elements 
     """
 
@@ -111,12 +111,12 @@ def get_header( shot, fname_in='', silent=False ):
 
     Parameters
     ----------
-    shot: int
+    shot : int
         Shot number
-    fname_in: str, optional
+    fname_in : str, optional
         Allows to optionally specify a filename explicitely (if it would not 
         be located at the default locations, for example).
-    silent: bool
+    silent : bool, optional
         If True some useful (?) output will be printed to console.
 
     Returns
@@ -175,14 +175,14 @@ def get_column_nr( shot, str2find, fname_in='', silent=False):
 
     Parameters
     ----------
-    shot: int
+    shot : int
         Shot number
-    str2find: str
+    str2find : str
         String used to identify the column number. 
-    fname_in: str
+    fname_in : str, optional
         Allows to optionally specify a filename explicitely (if it would not 
         be located at the default locations, for example).
-    silent: bool
+    silent : bool, optional
         If True some useful (?) output will be printed to console.
 
     Returns
@@ -222,14 +222,14 @@ def get_trace( shot, fname_in='', chName='', chNr=None, silent=False ):
 
     Parameters
     ----------
-    shot: int
+    shot : int
         Shot number
-    fname_in: str, optional
+    fname_in : str, optional
         Allows to optionally specify a filename explicitely (if it would not 
         be located at the default locations, for example).
-    chName: str, optional
-    chNr: int, optional
-    silent: bool, optional
+    chName : str, optional
+    chNr : int, optional
+    silent : bool, optional
         If True some useful (?) output will be printed to console.
     Returns
     -------
@@ -295,9 +295,9 @@ def calc_real_pressure( pressure, gas ):
 
     Parameters
     ----------
-    pressure: float
+    pressure : float
         Neutral gas pressure.
-    gas: str
+    gas : str
         Gas abbreviated as in the periodic table of the elements.
         
     Returns
@@ -344,12 +344,12 @@ def get_pressure( shot, fname_in='', silent=True ):
 
     Parameters
     ----------
-    shot: int
+    shot : int
         Shot number
-    fname_in: str, optional
+    fname_in : str, optional
         Allows to optionally specify a filename explicitely (if it would not 
         be located at the default locations, for example).
-    silent: bool, optional
+    silent : bool, optional
         If True some useful (?) output will be printed to console.
 
     Returns
@@ -412,9 +412,9 @@ def get_pressure_labbook( shot, silent=True ):
 
     Parameters
     ----------
-    shot: int
+    shot : int
         Shot number
-    silent: bool, optional
+    silent : bool, optional
         If True some useful (?) output will be printed to console.
 
     Returns
