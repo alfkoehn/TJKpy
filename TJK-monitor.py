@@ -113,7 +113,7 @@ def get_header( shot, fname_in='', silent=False ):
     ----------
     shot: int
         Shot number
-    fname_in: str
+    fname_in: str, optional
         Allows to optionally specify a filename explicitely (if it would not 
         be located at the default locations, for example).
     silent: bool
