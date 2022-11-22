@@ -489,3 +489,45 @@ def get_pressure_labbook( shot, silent=True ):
 #}}}
 
 
+def calc_2GHzPower( U_in, output='watt', direction='fw' ):
+#{{{
+    """
+    This function calculates the power of the 2.45 GHz magnetron measured 
+    at a directional coupler with two diodes.
+
+    Parameters
+    ----------
+    U_in : numpy.array
+        Time traces of the signal in voltage acquired with the TJK-monitor
+        LabVIEW programm.
+    output : str, optional
+        Possible values are 'watt', 'dBm'.
+    direction : str, optional
+        Possible values are 'fw', 'bw'.
+
+    Returns
+    -------
+    numpy.array
+        numpy.array containing the time trace converted to power.
+
+    """
+
+
+    # convert voltage signal (the time trace) from microwave diodes to dBm
+    # diodes used: IDM211 from IBF electronic GmbH, formula is from data sheet
+    signal_dBm  = 42.26782054007 + (-28.92407247331 - 42.26782054007) / ( 1. + (U_in / (-0.5508373840567) )**0.4255365582241 )
+
+    # account for damping of directional coupler
+    if direction == 'fw':
+        signal_dBm  += 60.49
+    elif signal == 'bw':
+        signal_dBm  += 60.11
+
+    if output == 'watt':
+        signal2return   = 10**(signal_dBm/10.) * 1e-3
+    elif output == 'dBm':
+        signal2return   = signal_dBm
+
+    return signal2return
+#}}}
+
