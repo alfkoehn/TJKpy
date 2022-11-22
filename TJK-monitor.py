@@ -512,6 +512,8 @@ def calc_2GHzPower( U_in, output='watt', direction='fw' ):
 
     """
 
+    # positive values lead to NaN in the following calculations
+    U_in[U_in>0]    = -1e-6
 
     # convert voltage signal (the time trace) from microwave diodes to dBm
     # diodes used: IDM211 from IBF electronic GmbH, formula is from data sheet
