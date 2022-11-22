@@ -531,3 +531,12 @@ def calc_2GHzPower( U_in, output='watt', direction='fw' ):
     return signal2return
 #}}}
 
+
+def main():
+#{{{
+    print( 'This file contains some hopefully useful functions to handle the data acquired with the TJK-Monitor LabVIEW program' )
+#}}}
+
+if __name__ == '__main__':
+    main()
+
