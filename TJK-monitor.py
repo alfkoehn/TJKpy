@@ -147,7 +147,7 @@ def get_header( shot, fname_in='', silent=False ):
         # if shot path is not found, use local active folder
         if (path_data == -1):
             path_data  = ''
-        fname_data  = path_data+'shot{0:d}.dat'.format( shot )
+        fname_data  = path_data+'interferometer/shot{0:d}.dat'.format( shot )
     else:
         fname_data  = fname_in
     # number of lines that include the header
@@ -260,7 +260,7 @@ def get_trace( shot, fname_in='', chName='', chNr=None, silent=False ):
         # if shot path is not found, use local active folder
         if (path_data == -1):
             path_data  = ''
-        fname_data  = path_data+'shot{0:d}.dat'.format( shot )
+        fname_data  = path_data+'interferometer/shot{0:d}.dat'.format( shot )
     else:
         fname_data  = fname_in
 
