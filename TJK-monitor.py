@@ -43,7 +43,7 @@ def get_shot_path( shot ):
                           ]
 
     for prePath in possible_folders:
-        shot_path   = '{0}/shot{1:d}/'.format( possible_folders, shot )
+        shot_path   = '{0}/shot{1:d}/'.format( prePath, shot )
         if os.path.isdir(shot_path):
             break
 
