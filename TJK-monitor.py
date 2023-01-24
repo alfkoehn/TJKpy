@@ -548,6 +548,7 @@ def main():
 
     shot    = args.shot
 
+    # print info about shot
     print( "Shot number: {0}".format(shot) )
 
 #}}}
