@@ -537,6 +537,19 @@ def calc_2GHzPower( U_in, output='watt', direction='fw' ):
 def main():
 #{{{
     print( 'This file contains some hopefully useful functions to handle the data acquired with the TJK-Monitor LabVIEW program' )
+
+    # initialize parser for command line options
+    parser  = argparse.ArgumentParser()
+    # add optional arguments
+    parser.add_argument( "-s", "--shot", type=int, default=13000, 
+            help='Shot number' )
+    # read all arguments from command line
+    args    = parser.parse_args()
+
+    shot    = args.shot
+
+    print( "Shot number: {0}".format(shot) )
+
 #}}}
 
 if __name__ == '__main__':
