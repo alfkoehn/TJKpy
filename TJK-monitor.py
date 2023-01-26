@@ -576,6 +576,8 @@ def plot_timetraces( shot, fname_out='',
             timetrace *= chCfg[data2plot[i]][1]
         ax.plot( time, timetrace )
         ax.set_ylabel( chCfg[data2plot[i]][3] )
+    # add x-label only to bottom axes object
+    ax.set_xlabel( 'time in s' )
 
     plt.show()
     
