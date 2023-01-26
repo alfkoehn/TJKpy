@@ -534,6 +534,55 @@ def calc_2GHzPower( U_in, output='watt', direction='fw' ):
 #}}}
 
 
+def plot_timetraces( shot, fname_out='', 
+                     silent=True ):
+
+    # idea: use dictionary for each diagnostics data stored via tjk-monitor
+    #       which contains channel name in tjk-monitor, conversion factor,
+    #       physical unit after applying conversion factor, comment,
+    #       shotnumber when it was first introduced (maybe in comment)
+
+    # number of timetraces to plot
+    # will probably be changed as an optional keyword later
+    n_traces    = 4
+
+    # get channel numbers from file stored with tjk-monitor.vi
+    chNr_B0         = get_column_nr(shot, 'I_Bh', silent=silent)
+    chNr_Pin2       = get_column_nr(shot, '2 GHz Richtk. forward', silent=silent)
+    chNr_Pout2      = get_column_nr(shot, '2 GHz Richtk. backward', silent=silent)
+    chNr_BoloSum    = get_column_nr(shot, 'Bolo_sum', silent=silent)
+
+    chNames     = [ 'I_Bh',
+                    '2 GHz Richtk. forward',
+                    'Interferometer (Mueller)',
+                    'Bolo_sum',
+                    '2 GHz Richtk. backward',
+                  ]
+
+    y_labels    = [ r'$B_0$ in $\mathrm{mT}$', 
+                    r'$P_{\mathrm{in}}$ in $\mathrm{kW}$',
+                    r'$\bar{n}_{e}$ in $10^{17}\,\mathrm{m}^{-3}$',
+                    r'$P_\mathrm{rad}$ in $\mathrm{W}$',
+                  ]
+
+    # get time axis and scale it to seconds
+    time    = get_trace(shot, chName='Zeit [ms]')
+    time   *= 1e-3
+
+    n_rows  = n_traces
+    n_cols  = 1
+    # figsize is per default (width, height) in inches
+    fig, axs    = plt.subplots( n_rows, n_cols, figsize=(8,8) )
+
+    # fig return value of plt.subplot has list of all axes objects
+    for i, ax in enumerate(fig.axes):
+        data2plot   = get_trace( shot, chName=chNames[i], silent=silent)
+        ax.plot( time, data2plot )
+        ax.set_ylabel(y_labels[i])
+
+    plt.show()
+    
+
 def main():
 #{{{
     print( 'This file contains some hopefully useful functions to handle the data acquired with the TJK-Monitor LabVIEW program' )
@@ -551,6 +600,8 @@ def main():
     # print info about shot
     print( "Shot number: {0}".format(shot) )
 
+    plot_timetraces( shot, fname_out='', 
+                     silent=True )
 #}}}
 
 if __name__ == '__main__':
