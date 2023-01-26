@@ -541,29 +541,24 @@ def plot_timetraces( shot, fname_out='',
     #       which contains channel name in tjk-monitor, conversion factor,
     #       physical unit after applying conversion factor, comment,
     #       shotnumber when it was first introduced (maybe in comment)
+    chCfg   = {}
+    chCfg['B0']         = ['I_Bh', 0.24, 'mT', 
+                           r'$B_0$ in $\mathrm{mT}$']
+    chCfg['Pin2']       = ['2 GHz Richtk. forward', np.nan, '', 
+                           r'$P_\mathrm{in}$ in $\mathrm{kW}$']
+    chCfg['Pout2']      = ['2 GHz Richtk. backward', np.nan, '', 
+                           r'$P_\mathrm{in}$ in $\mathrm{kW}$']
+    chCfg['BoloSum']    = ['Bolo_sum', np.nan, '', 
+                           r'$P_\mathrm{rad}$ in $\mathrm{W}$']
+    chCfg['neMueller']  = ['Interferometer (Mueller)', 1, '1e17 m^-3', 
+                           r'$\bar{n}_e$ in $10^{17}\,\mathrm{m}^{-3}$']
 
     # number of timetraces to plot
     # will probably be changed as an optional keyword later
     n_traces    = 4
 
-    # get channel numbers from file stored with tjk-monitor.vi
-    chNr_B0         = get_column_nr(shot, 'I_Bh', silent=silent)
-    chNr_Pin2       = get_column_nr(shot, '2 GHz Richtk. forward', silent=silent)
-    chNr_Pout2      = get_column_nr(shot, '2 GHz Richtk. backward', silent=silent)
-    chNr_BoloSum    = get_column_nr(shot, 'Bolo_sum', silent=silent)
+    data2plot   = ['B0', 'Pin2', 'neMueller', 'BoloSum']
 
-    chNames     = [ 'I_Bh',
-                    '2 GHz Richtk. forward',
-                    'Interferometer (Mueller)',
-                    'Bolo_sum',
-                    '2 GHz Richtk. backward',
-                  ]
-
-    y_labels    = [ r'$B_0$ in $\mathrm{mT}$', 
-                    r'$P_{\mathrm{in}}$ in $\mathrm{kW}$',
-                    r'$\bar{n}_{e}$ in $10^{17}\,\mathrm{m}^{-3}$',
-                    r'$P_\mathrm{rad}$ in $\mathrm{W}$',
-                  ]
 
     # get time axis and scale it to seconds
     time    = get_trace(shot, chName='Zeit [ms]')
@@ -576,9 +571,11 @@ def plot_timetraces( shot, fname_out='',
 
     # fig return value of plt.subplot has list of all axes objects
     for i, ax in enumerate(fig.axes):
-        data2plot   = get_trace( shot, chName=chNames[i], silent=silent)
-        ax.plot( time, data2plot )
-        ax.set_ylabel(y_labels[i])
+        timetrace   = get_trace( shot, chName=chCfg[data2plot[i]][0], silent=silent)
+        if np.isfinite(chCfg[data2plot[i]][1]):
+            timetrace *= chCfg[data2plot[i]][1]
+        ax.plot( time, timetrace )
+        ax.set_ylabel( chCfg[data2plot[i]][3] )
 
     plt.show()
     
