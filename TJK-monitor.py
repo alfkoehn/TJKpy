@@ -557,9 +557,13 @@ def calc_8GHzPower( U_in, direction='fw', old=False ):
     Returns
     -------
     numpy.array
-        numpy.array containing the time trace converted to power.
+        numpy.array containing the time trace converted to power in units
+        of Watts.
 
     """
+
+    # scale input signal to mV (calibration was done with mV)
+    U_in *= 1e3
 
     # optionally, use old calibration from TWT, see p.34 of PhD-notes from AKS
     if old:
