@@ -534,9 +534,53 @@ def calc_2GHzPower( U_in, output='watt', direction='fw' ):
 #}}}
 
 
+def calc_8GHzPower( U_in, direction='fw', old=False ):
+#{{{
+    """
+    This function calculates the power of the 8 GHz klystron measured 
+    at a directional coupler with a diode. 
+
+    For the forward direction, this corresponds to the previously used IDL 
+    function "kasparek_diode" written by Alf Köhn-Seemann (used the latest
+    version from 2012-11-14 from little_helper.pro).
+
+    Parameters
+    ----------
+    U_in : numpy.array
+        Time traces of the signal in voltage acquired with the TJK-monitor
+        LabVIEW programm.
+    direction : str, optional
+        Possible values are 'fw'. 'bw' is planned to be implemented later.
+
+    Returns
+    -------
+    numpy.array
+        numpy.array containing the time trace converted to power.
+
+    """
+
+    # optionally, use old calibration from TWT, see p.34 of PhD-notes from AKS
+    if old:
+        a1  = .771523
+        a2  = 4.97773
+        a3  = 1.394
+
+        P   = ( (U_in/a1)**2 * 1./a2 )**(1./a3)
+    else:
+        # use new calibration with Klystron, see p.144 of PD-notes from AKS
+        a1  = 17.5637
+        a2  = 0.332023
+        a3  = 0.458919 
+
+        P   = a1 * np.exp(a2 * np.abs(U_in)**a3)
+
+    return P
+#}}}
+
+
 def plot_timetraces( shot, fname_out='', 
                      silent=True ):
-
+#{{{
     # idea: use dictionary for each diagnostics data stored via tjk-monitor
     #       which contains channel name in tjk-monitor, conversion factor,
     #       physical unit after applying conversion factor, comment,
@@ -580,6 +624,7 @@ def plot_timetraces( shot, fname_out='',
     ax.set_xlabel( 'time in s' )
 
     plt.show()
+#}}}
     
 
 def main():
@@ -602,6 +647,7 @@ def main():
     plot_timetraces( shot, fname_out='', 
                      silent=True )
 #}}}
+
 
 if __name__ == '__main__':
     main()
