@@ -551,6 +551,8 @@ def calc_8GHzPower( U_in, direction='fw', old=False ):
         LabVIEW programm.
     direction : str, optional
         Possible values are 'fw'. 'bw' is planned to be implemented later.
+    old: bool, optional
+        If true, old calibration made for the TWT is used.
 
     Returns
     -------
