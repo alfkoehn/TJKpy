@@ -20,16 +20,29 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 def validate_shotnumber():
     # note: functions for widget-level validation must return True or False
+
+    col_ok      = "#00CC00"
+    col_notok   = "#FF6666"
+
     shot    = shot_entry.get()
     if shot:
         if shot.isdigit() and int(shot) > 0:
-            print( "fine, is number, shot = {0}".format(shot) )
+            status_label.config(
+                    text="status: shot #{0}".format(shot),
+                    background=col_ok
+                    )
             return True
         else:
-            print( "not fine, must be number" )
+            status_label.config(
+                    text="status: shot must be an integer",
+                    background=col_notok
+                    )
             return False
     else:
-        print( "not fine, is empty" )
+        status_label.config(
+                text="status: shot not entered",
+                background=col_notok
+                )
         return False
 
 
@@ -61,12 +74,13 @@ side_frame.pack(side="left",    # possible options: left, right, top, bottom
                                 # y   : expand only vertically
                )
 
+# write name of program at top
 label = tk.Label(side_frame, 
-                 text="shot-view", bg=col_sideframe, fg="#FFF", font=25)
+                 text="shot-view", bg=col_sideframe, fg=col_sideframe_font, 
+                 font=25)
 label.pack(pady=50, padx=20)
-#label.grid(row=0)
 
-# quit buttom
+# quit button at very bottom
 button_quit = tk.Button(side_frame,
                         text="Quit",
                         command=root.destroy)
@@ -115,6 +129,13 @@ timetraces_frame.pack(fill="both",
                                     # packed widgets, space will be distributed
                                     # among all widgets having set expand NE 0
                      )
+
+# status massage field at top
+status_label    = tk.Label(timetraces_frame,
+                           text="status: ready to go", 
+                           #bg=col_sideframe, fg=col_sideframe_font
+                          )
+status_label.pack(anchor="nw")
 
 # Canvas is used to generally draw pictures, graphs or any complex layout
 canvas1 = FigureCanvasTkAgg(fig1, timetraces_frame)
