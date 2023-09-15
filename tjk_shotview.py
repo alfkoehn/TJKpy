@@ -18,6 +18,21 @@ import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 
+def validate_shotnumber():
+    # note: functions for widget-level validation must return True or False
+    shot    = shot_entry.get()
+    if shot:
+        if shot.isdigit() and int(shot) > 0:
+            print( "fine, is number, shot = {0}".format(shot) )
+            return True
+        else:
+            print( "not fine, must be number" )
+            return False
+    else:
+        print( "not fine, is empty" )
+        return False
+
+
 fig1    = Figure()
 ax1     = fig1.add_subplot()
 
@@ -71,7 +86,10 @@ shot_label  = tk.Label(side_frame_inner,
 shot_label.grid(column=0, row=0, 
                 sticky="E",
                 padx=5, pady=5)
-shot_entry  = tk.Entry(side_frame_inner)
+shot_entry  = tk.Entry(side_frame_inner, 
+                       validatecommand=validate_shotnumber,
+                       validate="focusout"
+                      )
 shot_entry.grid(column=1, row=0,
                 sticky="W",
                 padx=5, pady=5)
