@@ -65,12 +65,14 @@ side_frame_inner.pack(side="top", fill="y")
 
 # user entry for shot number
 shot_label  = tk.Label(side_frame_inner, 
-                       text="shot", 
+                       text="shot",
                        bg=col_sideframe, fg="#FFF")
 shot_label.grid(column=0, row=0, 
+                sticky="E",
                 padx=5, pady=5)
 shot_entry  = tk.Entry(side_frame_inner)
 shot_entry.grid(column=1, row=0,
+                sticky="W",
                 padx=5, pady=5)
 
 # optional user entry where shot-data is located, i.e. path to data*
@@ -78,9 +80,11 @@ datapath_label  = tk.Label(side_frame_inner,
                            text="data path",
                        bg=col_sideframe, fg="#FFF")
 datapath_label.grid(column=0, row=1, 
+                    sticky="E",
                     padx=5, pady=5)
 datapath_entry  = tk.Entry(side_frame_inner)
 datapath_entry.grid(column=1, row=1,
+                    sticky="W",
                     padx=5, pady=5)
 
 timetraces_frame = tk.Frame(root)
