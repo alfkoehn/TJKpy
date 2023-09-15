@@ -125,23 +125,24 @@ def plot_timetraces(shot,
                            r'$P_\mathrm{in}$ in $\mathrm{kW}$']
     chCfg['Pout2']      = ['2 GHz Richtk. backward', np.nan, '', 
                            r'$P_\mathrm{in}$ in $\mathrm{kW}$']
+    chCfg['Pabs2']      = ['Pabs2', np.nan, '', 
+                           r'$P_\mathrm{abs}$ in $\mathrm{kW}$']
     chCfg['BoloSum']    = ['Bolo_sum', np.nan, '', 
                            r'$P_\mathrm{rad}$ in $\mathrm{W}$']
     chCfg['neMueller']  = ['Interferometer (Mueller)', 1, '1e17 m^-3', 
                            r'$\bar{n}_e$ in $10^{17}\,\mathrm{m}^{-3}$']
 
-    #timetrace_Pin2  = tjk.get_trace(shot, fname_in=fname_data, chName=chCfg['Pin2'][0])
-    #timetrace_Pout2 = tjk.get_trace(shot, fname_in=fname_data, chName=chCfg['Pout2'][0])
+    timetrace_Pin2  = tjk.get_trace(shot, fname_in=fname_data, chName=chCfg['Pin2'][0])
+    timetrace_Pout2 = tjk.get_trace(shot, fname_in=fname_data, chName=chCfg['Pout2'][0])
 
-    #Pabs2   = ( calc_2GHzPower(timetrace_Pin2,  output='watt', direction='fw')
-    #           -calc_2GHzPower(timetrace_Pout2, output='watt', direction='bw') )
-
+    timetrace_Pabs2   = ( tjk.calc_2GHzPower(timetrace_Pin2,  output='watt', direction='fw')
+                         -tjk.calc_2GHzPower(timetrace_Pout2, output='watt', direction='bw') )
 
     # number of timetraces to plot
     # will probably be changed as an optional keyword later
     n_traces    = 4
 
-    data2plot   = ['B0', 'Pin2', 'neMueller', 'BoloSum']
+    data2plot   = ['B0', 'Pabs2', 'neMueller', 'BoloSum']
 
     n_rows  = n_traces
     n_cols  = 1
@@ -149,11 +150,14 @@ def plot_timetraces(shot,
     # fig return value of plt.subplot has list of all axes objects
     #for i, ax in enumerate(fig.axes):
     for ii in range(n_traces):
-        print('**', ii, '**')
+        print('**', ii, data2plot[ii], '**')
         ax  = fig.add_subplot(n_rows, n_cols, ii+1)
-        timetrace   = tjk.get_trace( shot, fname_in=fname_data, 
-                                     chName=chCfg[data2plot[ii]][0] 
-                                   )
+        if data2plot[ii] == 'Pabs2':
+            timetrace   = timetrace_Pabs2
+        else:
+            timetrace   = tjk.get_trace( shot, fname_in=fname_data, 
+                                         chName=chCfg[data2plot[ii]][0] 
+                                       )
         if np.isfinite(chCfg[data2plot[ii]][1]):
             timetrace *= chCfg[data2plot[ii]][1]
         ax.plot( time, timetrace )
