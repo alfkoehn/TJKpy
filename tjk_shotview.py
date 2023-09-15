@@ -25,7 +25,7 @@ plt.rcParams['xtick.top']       = True
 plt.rcParams['ytick.right']     = True
 
 
-def validate_shotnumber():
+def validate_shotnumber(shot):
     #{{{
     # note: functions for widget-level validation must return True or False
 
@@ -53,6 +53,13 @@ def validate_shotnumber():
                 )
         return False
     #}}}
+
+
+def plot_timetraces(shot, status_label):
+    col_ok      = "#00CC00"
+
+    if not validate_shotnumber(shot):
+        return
 
 
 fig1    = Figure()
@@ -110,7 +117,7 @@ shot_label.grid(column=0, row=0,
                 sticky="E",
                 padx=5, pady=5)
 shot_entry  = tk.Entry(side_frame_inner, 
-                       validatecommand=validate_shotnumber,
+                       validatecommand=lambda: validate_shotnumber(shot_entry.get()),
                        validate="focusout"
                       )
 shot_entry.grid(column=1, row=0,
@@ -134,8 +141,10 @@ datapath_entry.grid(column=1, row=1,
 # plot button (for time traces)
 plot_button = tk.Button(side_frame_inner,
                         text="Plot time traces",
-                        #command=plot_timetraces
-                        )
+                        command=lambda: plot_timetraces(shot_entry.get(), 
+                                                        status_label
+                                                       )
+                       )
 plot_button.grid(row=2, columnspan=2, sticky=tk.W+tk.E, padx=5, pady=10)
 
 # some information deduced from time traces
