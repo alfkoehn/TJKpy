@@ -522,7 +522,7 @@ def calc_2GHzPower( U_in, output='watt', direction='fw' ):
     # account for damping of directional coupler
     if direction == 'fw':
         signal_dBm  += 60.49
-    elif signal == 'bw':
+    elif direction == 'bw':
         signal_dBm  += 60.11
 
     if output == 'watt':
