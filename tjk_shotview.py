@@ -27,6 +27,7 @@ ax1     = fig1.add_subplot()
 root = tk.Tk()
 root.title("TJ-K show-view")
 
+path2data           = "/"
 col_sideframe       = "#4C2A85"
 col_sideframe_font  = "#FFF"
 
@@ -83,6 +84,8 @@ datapath_label.grid(column=0, row=1,
                     sticky="E",
                     padx=5, pady=5)
 datapath_entry  = tk.Entry(side_frame_inner)
+# write default value into field
+datapath_entry.insert(0, path2data)
 datapath_entry.grid(column=1, row=1,
                     sticky="W",
                     padx=5, pady=5)
