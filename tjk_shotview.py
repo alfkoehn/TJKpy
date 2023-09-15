@@ -17,8 +17,16 @@ import tkinter as tk
 # to embed matplotlib into tkinter
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+# change some default properties of matplotlib
+#plt.rcParams.update({'font.size':14})
+plt.rcParams['xtick.direction'] = 'in'
+plt.rcParams['ytick.direction'] = 'in'
+plt.rcParams['xtick.top']       = True
+plt.rcParams['ytick.right']     = True
+
 
 def validate_shotnumber():
+    #{{{
     # note: functions for widget-level validation must return True or False
 
     col_ok      = "#00CC00"
@@ -44,6 +52,7 @@ def validate_shotnumber():
                 background=col_notok
                 )
         return False
+    #}}}
 
 
 fig1    = Figure()
