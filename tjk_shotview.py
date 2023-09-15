@@ -56,7 +56,7 @@ def validate_shotnumber():
 
 
 fig1    = Figure()
-ax1     = fig1.add_subplot()
+#ax1     = fig1.add_subplot()
 
 
 # create a window and add charts
@@ -93,7 +93,7 @@ label.pack(pady=50, padx=20)
 button_quit = tk.Button(side_frame,
                         text="Quit",
                         command=root.destroy)
-button_quit.pack(side=tk.BOTTOM, pady=10)
+button_quit.pack(side=tk.BOTTOM, padx=5, pady=10, fill="x")
 
 
 # side_frame will have an additional inner frame, which is organized via the
@@ -130,6 +130,18 @@ datapath_entry.insert(0, path2data)
 datapath_entry.grid(column=1, row=1,
                     sticky="W",
                     padx=5, pady=5)
+
+# plot button (for time traces)
+plot_button = tk.Button(side_frame_inner,
+                        text="Plot time traces",
+                        #command=plot_timetraces
+                        )
+plot_button.grid(row=2, columnspan=2, sticky=tk.W+tk.E, padx=5, pady=10)
+
+# some information deduced from time traces
+
+
+
 
 timetraces_frame = tk.Frame(root)
 timetraces_frame.pack(fill="both",
