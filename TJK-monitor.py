@@ -584,6 +584,18 @@ def calc_8GHzPower( U_in, direction='fw', old=False ):
 #}}}
 
 
+def get_lineAvgDensity( U_in, silent=True ):
+    #{{{
+
+    # correct for offset at the end of the time trace
+    # assumes that tjk-monitor is running after plasma is turned off
+    n_pts_offset    = 100
+    offset_end      = U_in[(-1*n_pts_offset):]
+    U_in           += -1*offset_end
+
+    #}}}
+
+
 def plot_timetraces( shot, fname_out='', 
                      silent=True ):
 #{{{
