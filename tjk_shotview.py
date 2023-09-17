@@ -188,16 +188,19 @@ def plot_timetraces(shot,
         ax  = fig.add_subplot(n_rows, n_cols, ii+1)
         if data2plot[ii] == 'Pabs2':
             timetrace   = timetrace_Pabs2
+            ylabel      = r'$P_\mathrm{abs}$ in $\mathrm{kW}$'
         elif data2plot[ii] == 'neMueller':
             timetrace   = timetrace_ne
+            ylabel      = r'$\bar{n}_e$ in $10^{17}\,\mathrm{m}^{-3}$'
         else:
             timetrace   = tjk.get_trace( shot, fname_in=fname_data, 
                                          chName=chCfg[data2plot[ii]][0] 
                                        )
+            ylabel      = chCfg[data2plot[ii]][3]
         if np.isfinite(chCfg[data2plot[ii]][1]):
             timetrace *= chCfg[data2plot[ii]][1]
         ax.plot( time, timetrace )
-        ax.set_ylabel( chCfg[data2plot[ii]][3] )
+        ax.set_ylabel( ylabel )
     # add x-label only to bottom axes object
     ax.set_xlabel( 'time in s' )
 
