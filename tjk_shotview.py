@@ -92,7 +92,7 @@ def plot_timetraces(shot,
     """
     TODO:
     [ ] only read and plot certain timetraces based on user choice
-        [ ] show all available channel to user
+        [ ] show all available channel to user (really all...?)
         [ ] allow user to tick channels they want to plot
         [ ] store choices in dict (?)
         [ ] allow user to tick certain channels based on their role not 
@@ -229,8 +229,6 @@ def checkbutton_clicked(var, str_var, timetraces_options, status_label):
 
 
 fig1    = Figure()
-#ax1     = fig1.add_subplot()
-
 
 # create a window and add charts
 # widgets exist in a hierachy, "root" is highest level
@@ -313,7 +311,8 @@ datapath_entry.grid(column=1, row=1,
 timetraces_options  = {
         'interf_drift_correct'  : 0,
         'interf_offset_correct' : 0,
-        'interf_calc_ne'        : 0
+        'interf_calc_ne'        : 0,
+        'P8GHz_in'              : 0,
         }
 # plot button (for time traces)
 plot_button = tk.Button(side_frame_inner,
@@ -332,9 +331,10 @@ plot_button.grid(row=2, columnspan=2, sticky=tk.W+tk.E, padx=5, pady=10)
 # checkbutton for drift correction
 interf_drift_var            = tk.IntVar()
 interf_drift_checkbutton    = tk.Checkbutton(side_frame_inner, 
-                                             text="correct drift",
+                                             text="correct interf. drift",
                                              variable=interf_drift_var,
-                                             onvalue=1, offvalue=0, 
+                                             onvalue=1, offvalue=0,
+                                             state=tk.DISABLED,
                                              #bd=0,
                                              #bg=col_sideframe, 
                                              #fg=col_sideframe_font,    # this makes problems, tick seems to become invisible (?)
@@ -361,11 +361,38 @@ interf_neCalc_checkbutton   = tk.Checkbutton(side_frame_inner,
                                                  status_label)
                                             )
 interf_neCalc_checkbutton.grid(row=4, column=1, sticky=tk.W, padx=5)
+# checkbutton for correction for offset at end
+interf_offsetCorr_var   = tk.IntVar()
+interf_offsetCorr_check = tk.Checkbutton(side_frame_inner,
+                                         text="correct offset",
+                                         variable=interf_offsetCorr_var,
+                                         state=tk.DISABLED,
+                                         command=lambda: checkbutton_clicked(
+                                             interf_offsetCorr_var,
+                                             "interf_offset_correct",
+                                             timetraces_options,
+                                             status_label)
+                                         )
+interf_offsetCorr_check.grid(row=5, column=1, sticky=tk.W, padx=5)
+# checkbutton for ingoing 8 GHz measured via Kasparek diode
+P8GHz_in_var    = tk.IntVar()
+P8GHz_in_check  = tk.Checkbutton(side_frame_inner,
+                                 text="include P_in8GHz",
+                                 variable=P8GHz_in_var,
+                                 state=tk.DISABLED,
+                                 command=lambda: checkbutton_clicked(
+                                    P8GHz_in_var,
+                                    "P8GHz_in",
+                                    timetraces_options,
+                                    status_label)
+                                 )
+P8GHz_in_check.grid(row=6, column=1, sticky=tk.W, padx=5)
 
 
 
 # some information deduced from time traces
-
+# calculate line-averaged density as value obtained from plasma-off
+# calculate non-gastype corrected (i.e. displayed) neutral gas pressure at offset_0
 
 
 
