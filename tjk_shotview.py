@@ -98,6 +98,9 @@ def plot_timetraces(shot,
         [ ] allow user to tick certain channels based on their role not 
             their exact name, e.g. P_abs2.455Ghz or n_e
     """
+   
+    # plot needs to be cleared otherwise x- and y-axis will be "over-drawn"
+    fig.clf()
 
     col_ok      = "#00CC00"
 
@@ -149,7 +152,6 @@ def plot_timetraces(shot,
     n_pts_offset    = 100
     # optionally, correct for drift by subtracting straight line (slope)
     # between offset before plasma turn-on and offset after plasma turn-off
-    interf_correctDrift = True
     if timetraces_options['interf_drift_correct']:
         offset_start    = np.mean(timetrace_ne[:n_pts_offset])
         offset_end      = np.mean(timetrace_ne[(-1*n_pts_offset):])
@@ -158,8 +160,17 @@ def plot_timetraces(shot,
         #       ==> y2 and y1 are just the offset values, neglecting the drift in the offset itself
         #       ==> x2 and x1 and harder to get, we actually need to determine the jump-positions,
         #           i.e. when the plasma is turned on and turned off again
+        #       then the function can be subtracted from original function of correct for drift
+        #       ==> new = old - ((offset_1-offset_0)/(jump_off-jump_on)*time + offset_0)
         #       idea: do as with previous IDL version (look for min and max in derivative of interferometer)
         #       as an easy check, include a button for marking the jumps in plot
+    if timetraces_options['interf_calc_ne']:
+        # TODO: for 'Interferometer (Mueller)' and 'Interferometer Phase' the
+        #       scaling factor is 3.883e17 until the damage and repair by e.ho
+        #       in summer 2022, then it was changed to half of that.
+        #       for 'Density (old)' and befor the factor is 6.7e16
+        timetrace_ne    *= 3.883#e17
+
 
     # number of timetraces to plot
     # will probably be changed as an optional keyword later
@@ -177,6 +188,8 @@ def plot_timetraces(shot,
         ax  = fig.add_subplot(n_rows, n_cols, ii+1)
         if data2plot[ii] == 'Pabs2':
             timetrace   = timetrace_Pabs2
+        elif data2plot[ii] == 'neMueller':
+            timetrace   = timetrace_ne
         else:
             timetrace   = tjk.get_trace( shot, fname_in=fname_data, 
                                          chName=chCfg[data2plot[ii]][0] 
@@ -188,9 +201,7 @@ def plot_timetraces(shot,
     # add x-label only to bottom axes object
     ax.set_xlabel( 'time in s' )
 
-
-
-    canvas1.draw()
+    canvas.draw()
     #}}}
 
 
@@ -331,6 +342,23 @@ interf_drift_checkbutton    = tk.Checkbutton(side_frame_inner,
                                                  status_label)
                                             )
 interf_drift_checkbutton.grid(row=3, column=1, sticky=tk.W, padx=5)
+# checkbutton for calculating line-averaged density timetrace
+interf_neCalc_var           = tk.IntVar()
+interf_neCalc_checkbutton   = tk.Checkbutton(side_frame_inner, 
+                                             text="calculate n_e",
+                                             variable=interf_neCalc_var,
+                                             onvalue=1, offvalue=0, 
+                                             #bd=0,
+                                             #bg=col_sideframe, 
+                                             #fg=col_sideframe_font,    # this makes problems, tick seems to become invisible (?)
+                                             command=lambda: checkbutton_clicked(
+                                                 interf_neCalc_var,
+                                                 "interf_calc_ne",        # NOTE: must be same as dictionary key 
+                                                 timetraces_options,
+                                                 status_label)
+                                            )
+interf_neCalc_checkbutton.grid(row=4, column=1, sticky=tk.W, padx=5)
+
 
 
 # some information deduced from time traces
