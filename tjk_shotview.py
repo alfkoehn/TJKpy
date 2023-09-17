@@ -85,7 +85,8 @@ def get_tjkmonitor_datapath(shot):
 
 def plot_timetraces(shot, 
                     status_label, datapath_entry,
-                    fig, canvas
+                    fig, canvas,
+                    timetraces_options
                    ):
     #{{{
     """
@@ -132,11 +133,33 @@ def plot_timetraces(shot,
     chCfg['neMueller']  = ['Interferometer (Mueller)', 1, '1e17 m^-3', 
                            r'$\bar{n}_e$ in $10^{17}\,\mathrm{m}^{-3}$']
 
+    # get timetraces of diodes installed at directional coupler in 2.45 GHz 
+    # transmission line and calculate P_abs = P_in - P_out
     timetrace_Pin2  = tjk.get_trace(shot, fname_in=fname_data, chName=chCfg['Pin2'][0])
     timetrace_Pout2 = tjk.get_trace(shot, fname_in=fname_data, chName=chCfg['Pout2'][0])
+    timetrace_Pabs2  = ( tjk.calc_2GHzPower(timetrace_Pin2,  output='watt', direction='fw')
+                        -tjk.calc_2GHzPower(timetrace_Pout2, output='watt', direction='bw') )
 
-    timetrace_Pabs2   = ( tjk.calc_2GHzPower(timetrace_Pin2,  output='watt', direction='fw')
-                         -tjk.calc_2GHzPower(timetrace_Pout2, output='watt', direction='bw') )
+    # get timetrace of interferometer signal, optionally
+    #   correct for drift
+    #   correct for offset
+    #   calculate actual electron plasma density
+    timetrace_ne    = tjk.get_trace(shot, fname_in=fname_data, chName=chCfg['neMueller'][0])
+    # number of points for offset calculation and drift correction
+    n_pts_offset    = 100
+    # optionally, correct for drift by subtracting straight line (slope)
+    # between offset before plasma turn-on and offset after plasma turn-off
+    interf_correctDrift = True
+    if timetraces_options['interf_drift_correct']:
+        offset_start    = np.mean(timetrace_ne[:n_pts_offset])
+        offset_end      = np.mean(timetrace_ne[(-1*n_pts_offset):])
+        print("offset_start = {0}, offset_end = {1}".format(offset_start, offset_end))
+        # TODO: y = m*x + b, m = (y2-y1)/(x2-x1)
+        #       ==> y2 and y1 are just the offset values, neglecting the drift in the offset itself
+        #       ==> x2 and x1 and harder to get, we actually need to determine the jump-positions,
+        #           i.e. when the plasma is turned on and turned off again
+        #       idea: do as with previous IDL version (look for min and max in derivative of interferometer)
+        #       as an easy check, include a button for marking the jumps in plot
 
     # number of timetraces to plot
     # will probably be changed as an optional keyword later
@@ -168,6 +191,26 @@ def plot_timetraces(shot,
 
 
     canvas1.draw()
+    #}}}
+
+
+def checkbutton_clicked(var, str_var, timetraces_options, status_label):
+    #{{{
+
+    col_ok      = "#00CC00"
+
+    if var.get():
+        status_label.config(
+                text="status: {0} activated".format(str_var),
+                background=col_ok
+                )
+        timetraces_options[str_var] = 1
+    else:
+        status_label.config(
+                text="status: {0} deactivated".format(str_var),
+                background=col_ok
+                )
+        timetraces_options[str_var] = 0
     #}}}
 
 
@@ -221,7 +264,7 @@ side_frame_inner.pack(side="top", fill="y")
 # user entry for shot number
 shot_label  = tk.Label(side_frame_inner, 
                        text="shot",
-                       bg=col_sideframe, fg="#FFF")
+                       bg=col_sideframe, fg=col_sideframe_font)
 shot_label.grid(column=0, row=0, 
                 sticky="E",
                 padx=5, pady=5)
@@ -252,16 +295,43 @@ datapath_entry.grid(column=1, row=1,
                     sticky="W",
                     padx=5, pady=5)
 
+# dictionary for some optional data processing stuff
+timetraces_options  = {
+        'interf_drift_correct'  : 0,
+        'interf_offset_correct' : 0,
+        'interf_calc_ne'        : 0
+        }
 # plot button (for time traces)
 plot_button = tk.Button(side_frame_inner,
                         text="Plot time traces",
                         command=lambda: plot_timetraces(shot_entry.get(), 
                                                         status_label,
                                                         datapath_entry,
-                                                        fig1, canvas1
+                                                        fig1, canvas1,
+                                                        timetraces_options
                                                        )
                        )
 plot_button.grid(row=2, columnspan=2, sticky=tk.W+tk.E, padx=5, pady=10)
+
+# some checkboxes to activate/deactivate certain timetraces and certain
+# data processing stuff
+# checkbutton for drift correction
+interf_drift_var            = tk.IntVar()
+interf_drift_checkbutton    = tk.Checkbutton(side_frame_inner, 
+                                             text="correct drift",
+                                             variable=interf_drift_var,
+                                             onvalue=1, offvalue=0, 
+                                             #bd=0,
+                                             #bg=col_sideframe, 
+                                             #fg=col_sideframe_font,    # this makes problems, tick seems to become invisible (?)
+                                             command=lambda: checkbutton_clicked(
+                                                 interf_drift_var,
+                                                 "interf_drift_correct",        # NOTE: must be same as dictionary key 
+                                                 timetraces_options,
+                                                 status_label)
+                                            )
+interf_drift_checkbutton.grid(row=3, column=1, sticky=tk.W, padx=5)
+
 
 # some information deduced from time traces
 
