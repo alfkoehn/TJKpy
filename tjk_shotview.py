@@ -72,13 +72,16 @@ def get_tjkmonitor_datapath(shot):
 
     fname_data  = 'shot{0}.dat'.format(shot)
 
-    print( fname_data )
-
     # first, test if the folder from which this code is called has the data
     if os.path.isfile( fname_data ):
         return "."
     else:
-        return errValue
+        shot_path   = tjk.get_shot_path(shot)
+        if isinstance(shot_path, str):
+            shot_path += 'interferometer/'
+            return shot_path
+        else:
+            return errValue
 
     #}}}
 
