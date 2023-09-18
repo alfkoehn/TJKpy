@@ -37,6 +37,7 @@ def get_shot_path( shot ):
         print('get_shot_path: warning, argument <shot> should be int, is string')
         print('               will be converted to int, shot = ', shot)
         print('               might trigger some side effects')
+        shot = int(shot)
 
     possible_folders    = [ 
                             '/data6/', 
