@@ -17,7 +17,8 @@ import tkinter as tk
 import os.path
 
 # to embed matplotlib into tkinter
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
+                                               NavigationToolbar2Tk)
 
 # import some TJ-K related function
 import importlib    # required due to the dash in the filena,e
@@ -417,10 +418,23 @@ status_label.pack(anchor="nw")
 # Canvas is used to generally draw pictures, graphs or any complex layout
 canvas1 = FigureCanvasTkAgg(fig1, timetraces_frame)
 canvas1.draw()
-# return tk-widget associated with this canvas, then call pack to place it
-canvas1.get_tk_widget().pack(side="left", fill="both", expand=True)
 
-#tk.Button(frame, text="plot graph", command=plot).pack(pady=10)
+# matplotlib toolbar
+plot_toolbar    = NavigationToolbar2Tk( 
+        canvas1, 
+        timetraces_frame, 
+        pack_toolbar=False,      # recommended
+        )
+plot_toolbar.config(background='white')
+plot_toolbar._message_label.config(background='white')
+# initialise toolbar object
+plot_toolbar.update()
+# pack toolbar into GUI
+plot_toolbar.pack(anchor=tk.W, side=tk.BOTTOM, fill=tk.X)
+
+# return tk-widget associated with this canvas, then call pack to place it
+# note: needs to be called after initializing toolbar
+canvas1.get_tk_widget().pack(side="left", fill="both", expand=True)
 
 # infinite loop waiting for events to occur and process them
 root.mainloop()
