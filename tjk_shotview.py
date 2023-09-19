@@ -426,7 +426,7 @@ canvas1.draw()
 plot_toolbar    = NavigationToolbar2Tk( 
         canvas1, 
         timetraces_frame, 
-        pack_toolbar=False,      # recommended
+        #pack_toolbar=False,      # recommended, but does not work for newer version of some libraries
         )
 plot_toolbar.config(background='white')
 plot_toolbar._message_label.config(background='white')
