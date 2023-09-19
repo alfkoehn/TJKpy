@@ -195,7 +195,10 @@ def plot_timetraces(shot,
             ylabel      = r'$P_\mathrm{abs}$ in $\mathrm{kW}$'
         elif data2plot[ii] == 'neMueller':
             timetrace   = timetrace_ne
-            ylabel      = r'$\bar{n}_e$ in $10^{17}\,\mathrm{m}^{-3}$'
+            if timetraces_options['interf_calc_ne']:
+                ylabel      = r'$\bar{n}_e$ in $10^{17}\,\mathrm{m}^{-3}$'
+            else:
+                ylabel      = r'$\bar{n}_e$ in a.u.'
         else:
             timetrace   = tjk.get_trace( shot, fname_in=fname_data, 
                                          chName=chCfg[data2plot[ii]][0] 
