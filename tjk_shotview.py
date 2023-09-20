@@ -320,6 +320,7 @@ timetraces_options  = {
         'interf_offset_correct' : 0,
         'interf_calc_ne'        : 0,
         'P8GHz_in'              : 0,
+        'BoloSum'               : 0,
         }
 # plot button (for time traces)
 plot_button = tk.Button(side_frame_inner,
@@ -394,6 +395,20 @@ P8GHz_in_check  = tk.Checkbutton(side_frame_inner,
                                     status_label)
                                  )
 P8GHz_in_check.grid(row=6, column=1, sticky=tk.W, padx=5)
+
+# checkbutton for including the Bolometer sum channel
+boloSum_var     = tk.IntVar()
+boloSum_check   = tk.Checkbutton(side_frame_inner,
+                                 text="include Bolo_sum",
+                                 variable=boloSum_var,
+                                 state=tk.DISABLED,
+                                 command=lambda: checkbutton_clicked(
+                                     boloSum_var,
+                                     "BoloSum",
+                                     timetraces_options,
+                                     status_label)
+                                 )
+boloSum_check.grid(row=7, column=1, sticky=tk.W, padx=5)
 
 
 
