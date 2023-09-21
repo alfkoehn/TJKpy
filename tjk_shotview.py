@@ -119,103 +119,111 @@ def plot_timetraces(shot,
     time   *= 1e-3
 
     # get number of timetraces to be plotted based on choice made by user
-    #n_traces    = np.sum( timetraces_options[
-
-
-
-
+    # loop through dictionary and sum up every key starting with "plot"
+    n_traces    = 0
+    for key in timetraces_options:
+        if key.startswith('plot'):
+            n_traces    += timetraces_options[key]
 
     # idea: use dictionary for each diagnostics data stored via tjk-monitor
-    #       which contains channel name in tjk-monitor, conversion factor
-    #       (if a single conversion factor can be applied), 
-    #       title for plot (including info about physical unit), comment,
-    #       shotnumber when it was first introduced (maybe in comment)
+    #       which contains 
+    #         (1) channel name in tjk-monitor
+    #         (2) conversion factor (if single factor makes sense)
+    #         (3) physical units after applying conversion factor
+    #         (4) y-axis label for plot
+    #         (5) optional comment
+    # note that the key-name MUST be identical to timetraces_options
+    #   --> this should probably be changed somehow in a future version
+    #       as it is errorprone this way
     chCfg   = {}
-    chCfg['B0']         = ['I_Bh', 0.24, 'mT', 
-                           r'$B_0$ in $\mathrm{mT}$']
-    chCfg['Pin2']       = ['2 GHz Richtk. forward', np.nan, '', 
-                           r'$P_\mathrm{in}$ in $\mathrm{kW}$']
-    chCfg['Pout2']      = ['2 GHz Richtk. backward', np.nan, '', 
-                           r'$P_\mathrm{in}$ in $\mathrm{kW}$']
-    chCfg['Pabs2']      = ['Pabs2', np.nan, '', 
-                           r'$P_\mathrm{abs}$ in $\mathrm{kW}$']
-    chCfg['BoloSum']    = ['Bolo_sum', np.nan, '', 
-                           r'$P_\mathrm{rad}$ in $\mathrm{W}$']
-    chCfg['neMueller']  = ['Interferometer (Mueller)', 1, '1e17 m^-3', 
-                           r'$\bar{n}_e$ in $10^{17}\,\mathrm{m}^{-3}$']
+    chCfg['plot_B0']        = ['I_Bh', 0.24, 'mT', 
+                               r'$B_0$ in $\mathrm{mT}$']
+    chCfg['plot_P2GHz_in']  = ['2 GHz Richtk. forward', np.nan, '', 
+                               r'$P_\mathrm{in}$ in $\mathrm{kW}$']
+    chCfg['plot_P2GHz_out'] = ['2 GHz Richtk. backward', np.nan, '', 
+                               r'$P_\mathrm{in}$ in $\mathrm{kW}$']
+    chCfg['plot_P2GHz_abs'] = ['Pabs2', np.nan, '', 
+                               r'$P_\mathrm{abs}$ in $\mathrm{kW}$']
+    chCfg['plot_P8GHz_in']  = ['8 GHz power', np.nan, '', 
+                               r'$P_\mathrm{in}$ in $\mathrm{kW}$']
+    chCfg['plot_BoloSum']   = ['Bolo_sum', np.nan, '', 
+                               r'$P_\mathrm{rad}$ in $\mathrm{W}$']
+    chCfg['plot_interf']    = ['Interferometer (Mueller)', 1, '1e17 m^-3', 
+                               r'$\bar{n}_e$ in $10^{17}\,\mathrm{m}^{-3}$']
 
-    # get timetraces of diodes installed at directional coupler in 2.45 GHz 
-    # transmission line and calculate P_abs = P_in - P_out
-    timetrace_Pin2  = tjk.get_trace(shot, fname_in=fname_data, chName=chCfg['Pin2'][0])
-    timetrace_Pout2 = tjk.get_trace(shot, fname_in=fname_data, chName=chCfg['Pout2'][0])
-    timetrace_Pabs2  = ( tjk.calc_2GHzPower(timetrace_Pin2,  output='watt', direction='fw')
-                        -tjk.calc_2GHzPower(timetrace_Pout2, output='watt', direction='bw') )
+    n_rows      = n_traces
+    n_cols      = 1
+    plot_count  = 1
+    for key in timetraces_options:
+        if key.startswith('plot') and (timetraces_options[key] == 1):
+            print( key, timetraces_options[key] )
+            ax  = fig.add_subplot(n_rows, n_cols, plot_count)
 
-    # get timetrace of interferometer signal, optionally
-    #   correct for drift
-    #   correct for offset
-    #   calculate actual electron plasma density
-    timetrace_ne    = tjk.get_trace(shot, fname_in=fname_data, chName=chCfg['neMueller'][0])
-    # number of points for offset calculation and drift correction
-    n_pts_offset    = 100
-    # optionally, correct for drift by subtracting straight line (slope)
-    # between offset before plasma turn-on and offset after plasma turn-off
-    if timetraces_options['interf_drift_correct']:
-        offset_start    = np.mean(timetrace_ne[:n_pts_offset])
-        offset_end      = np.mean(timetrace_ne[(-1*n_pts_offset):])
-        print("offset_start = {0}, offset_end = {1}".format(offset_start, offset_end))
-        # TODO: y = m*x + b, m = (y2-y1)/(x2-x1)
-        #       ==> y2 and y1 are just the offset values, neglecting the drift in the offset itself
-        #       ==> x2 and x1 and harder to get, we actually need to determine the jump-positions,
-        #           i.e. when the plasma is turned on and turned off again
-        #       then the function can be subtracted from original function of correct for drift
-        #       ==> new = old - ((offset_1-offset_0)/(jump_off-jump_on)*time + offset_0)
-        #       idea: do as with previous IDL version (look for min and max in derivative of interferometer)
-        #       as an easy check, include a button for marking the jumps in plot
-    if timetraces_options['interf_calc_ne']:
-        # TODO: for 'Interferometer (Mueller)' and 'Interferometer Phase' the
-        #       scaling factor is 3.883e17 until the damage and repair by e.ho
-        #       in summer 2022, then it was changed to half of that.
-        #       for 'Density (old)' and befor the factor is 6.7e16
-        timetrace_ne    *= 3.883#e17
-
-
-    # number of timetraces to plot
-    # will probably be changed as an optional keyword later
-    n_traces    = 4
-
-    data2plot   = ['B0', 'Pabs2', 'neMueller', 'BoloSum']
-
-    n_rows  = n_traces
-    n_cols  = 1
-
-    # fig return value of plt.subplot has list of all axes objects
-    #for i, ax in enumerate(fig.axes):
-    for ii in range(n_traces):
-        print('**', ii, data2plot[ii], '**')
-        ax  = fig.add_subplot(n_rows, n_cols, ii+1)
-        if data2plot[ii] == 'Pabs2':
-            timetrace   = timetrace_Pabs2
-            ylabel      = r'$P_\mathrm{abs}$ in $\mathrm{kW}$'
-        elif data2plot[ii] == 'neMueller':
-            timetrace   = timetrace_ne
-            if timetraces_options['interf_calc_ne']:
-                ylabel      = r'$\bar{n}_e$ in $10^{17}\,\mathrm{m}^{-3}$'
+            # P_abs for 2.45 GHz is calculated using two timetraces
+            if key == 'plot_2GHz_abs':
+                timetrace_Pin2  = tjk.get_trace(shot, fname_in=fname_data, 
+                                                chName=chCfg['plot_P2GHz_in'][0])
+                timetrace_Pout2 = tjk.get_trace(shot, fname_in=fname_data, 
+                                                chName=chCfg['plot_P2GHz_out'][0])
+                timetrace       = ( tjk.calc_2GHzPower(timetrace_Pin2,  output='watt', direction='fw')
+                                   -tjk.calc_2GHzPower(timetrace_Pout2, output='watt', direction='bw') )
+            # default case
             else:
-                ylabel      = r'$\bar{n}_e$ in a.u.'
-        else:
-            timetrace   = tjk.get_trace( shot, fname_in=fname_data, 
-                                         chName=chCfg[data2plot[ii]][0] 
-                                       )
-            ylabel      = chCfg[data2plot[ii]][3]
-        if np.isfinite(chCfg[data2plot[ii]][1]):
-            timetrace *= chCfg[data2plot[ii]][1]
-        ax.plot( time, timetrace )
-        ax.set_ylabel( ylabel )
+                timetrace   = tjk.get_trace(shot, fname_in=fname_data, 
+                                            chName=chCfg[key][0])
+
+            ylabel  = chCfg[key][3]
+
+            # optionally, scale timetraces to physical units (instead of volts)
+            if np.isfinite(chCfg[key][1]):
+                timetrace *= chCfg[key][1]
+            if key == 'plot_P2GHz_in':
+                timetrace   = tjk.calc_2GHzPower(timetrace_Pin2,  output='watt', direction='fw')
+            elif key == 'plot_P2GHz_out':
+                timetrace   = tjk.calc_2GHzPower(timetrace_Pin2,  output='watt', direction='bw')
+            elif key == 'plot_P8GHz_in':
+                timetrace   = tjk.calc_8GHzPower(timetrace,  direction='fw')
+            elif key == 'plot_interf':
+                # correct for drift
+                # correct for offset
+                # calculate actual electron plasma density
+                # number of points for offset calculation and drift correction
+                n_pts_offset    = 100
+                # optionally, correct for drift by subtracting straight line (slope)
+                # between offset before plasma turn-on and offset after plasma turn-off
+                if timetraces_options['interf_drift_correct']:
+                    offset_start    = np.mean(timetrace_ne[:n_pts_offset])
+                    offset_end      = np.mean(timetrace_ne[(-1*n_pts_offset):])
+                    print("offset_start = {0}, offset_end = {1}".format(offset_start, offset_end))
+                    # TODO: y = m*x + b, m = (y2-y1)/(x2-x1)
+                    #       ==> y2 and y1 are just the offset values, neglecting the drift in the offset itself
+                    #       ==> x2 and x1 and harder to get, we actually need to determine the jump-positions,
+                    #           i.e. when the plasma is turned on and turned off again
+                    #       then the function can be subtracted from original function of correct for drift
+                    #       ==> new = old - ((offset_1-offset_0)/(jump_off-jump_on)*time + offset_0)
+                    #       idea: do as with previous IDL version (look for min and max in derivative of interferometer)
+                    #       as an easy check, include a button for marking the jumps in plot
+                if timetraces_options['interf_calc_ne']:
+                    # TODO: for 'Interferometer (Mueller)' and 'Interferometer Phase' the
+                    #       scaling factor is 3.883e17 until the damage and repair by e.ho
+                    #       in summer 2022, then it was changed to half of that.
+                    #       for 'Density (old)' and befor the factor is 6.7e16
+                    if shot >= 13032:
+                        timetrace_ne    *= 3.883/2.#e17
+                    else:
+                        timetrace_ne    *= 3.883#e17
+
+            ax.plot(time, timetrace)
+            ax.set_ylabel(ylabel)
+
+            plot_count  += 1
+
+
     # add x-label only to bottom axes object
     ax.set_xlabel( 'time in s' )
 
     canvas.draw()
+
     #}}}
 
 
@@ -321,12 +329,12 @@ datapath_entry.grid(column=1, row=1,
 # dictionary for some optional data processing stuff
 timetraces_options  = {
         'plot_B0'               : 1,
+        'plot_P2GHz_abs'        : 1,
+        'plot_P8GHz_in'         : 0,
         'plot_interf'           : 1,
         'interf_drift_correct'  : 0,
         'interf_offset_correct' : 0,
         'interf_calc_ne'        : 0,
-        'plot_P8GHz_in'         : 0,
-        'plot_P2GHz_abs'        : 1,
         'plot_BoloSum'          : 0,
         }
 # plot button (for time traces)
@@ -437,7 +445,7 @@ P8GHz_in_var    = tk.IntVar()
 P8GHz_in_check  = tk.Checkbutton(side_frame_inner,
                                  text="include P_in8GHz",
                                  variable=P8GHz_in_var,
-                                 state=tk.DISABLED,
+                                 state=tk.NORMAL,
                                  command=lambda: checkbutton_clicked(
                                     P8GHz_in_var,
                                     "plot_P8GHz_in",
