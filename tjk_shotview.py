@@ -148,8 +148,12 @@ def plot_timetraces(shot,
                                r'$P_\mathrm{in}$ in $\mathrm{kW}$']
     chCfg['plot_BoloSum']   = ['Bolo_sum', np.nan, '', 
                                r'$P_\mathrm{rad}$ in $\mathrm{W}$']
-    chCfg['plot_interf']    = ['Interferometer (Mueller)', 1, '1e17 m^-3', 
-                               r'$\bar{n}_e$ in a.u.']
+    if shot >= 13316:   # TODO: this number needs to be corrected to some lower shotnumber
+        chCfg['plot_interf']    = ['Interferometer digital', 1, '1e17 m^-3', 
+                                   r'$\bar{n}_e$ in a.u.']
+    else:
+        chCfg['plot_interf']    = ['Interferometer (Mueller)', 1, '1e17 m^-3', 
+                                   r'$\bar{n}_e$ in a.u.']
 
     n_rows      = n_traces
     n_cols      = 1
