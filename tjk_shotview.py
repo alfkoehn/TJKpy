@@ -118,9 +118,6 @@ def plot_timetraces(shot,
     time    = tjk.get_trace(shot, fname_in=fname_data, chName='Zeit [ms]')
     time   *= 1e-3
 
-    #timetrace   = tjk.get_trace( shot, fname_in=fname_data, chName='I_Bh' )
-
-
     # idea: use dictionary for each diagnostics data stored via tjk-monitor
     #       which contains channel name in tjk-monitor, conversion factor
     #       (if a single conversion factor can be applied), 
@@ -316,6 +313,7 @@ datapath_entry.grid(column=1, row=1,
 
 # dictionary for some optional data processing stuff
 timetraces_options  = {
+        'B0'                    : 1,
         'interf_drift_correct'  : 0,
         'interf_offset_correct' : 0,
         'interf_calc_ne'        : 0,
@@ -334,8 +332,26 @@ plot_button = tk.Button(side_frame_inner,
                        )
 plot_button.grid(row=2, columnspan=2, sticky=tk.W+tk.E, padx=5, pady=10)
 
+
 # some checkboxes to activate/deactivate certain timetraces and certain
 # data processing stuff
+# checkbutton for plotting timetrace of B0
+plot_B0_var                 = tk.IntVar(value=timetraces_options['B0'])
+plot_B0_checkbutton         = tk.Checkbutton(side_frame_inner, 
+                                             text="include B0",
+                                             variable=plot_B0_var,
+                                             onvalue=1, offvalue=0,
+                                             state=tk.NORMAL,
+                                             #bd=0,
+                                             #bg=col_sideframe, 
+                                             #fg=col_sideframe_font,    # this makes problems, tick seems to become invisible (?)
+                                             command=lambda: checkbutton_clicked(
+                                                 plot_B0_var,
+                                                 "B0",        # NOTE: must be same as dictionary key 
+                                                 timetraces_options,
+                                                 status_label)
+                                            )
+plot_B0_checkbutton.grid(row=3, column=1, sticky=tk.W, padx=5)
 # checkbutton for drift correction
 interf_drift_var            = tk.IntVar()
 interf_drift_checkbutton    = tk.Checkbutton(side_frame_inner, 
@@ -343,16 +359,13 @@ interf_drift_checkbutton    = tk.Checkbutton(side_frame_inner,
                                              variable=interf_drift_var,
                                              onvalue=1, offvalue=0,
                                              state=tk.DISABLED,
-                                             #bd=0,
-                                             #bg=col_sideframe, 
-                                             #fg=col_sideframe_font,    # this makes problems, tick seems to become invisible (?)
                                              command=lambda: checkbutton_clicked(
                                                  interf_drift_var,
                                                  "interf_drift_correct",        # NOTE: must be same as dictionary key 
                                                  timetraces_options,
                                                  status_label)
                                             )
-interf_drift_checkbutton.grid(row=3, column=1, sticky=tk.W, padx=5)
+interf_drift_checkbutton.grid(row=4, column=1, sticky=tk.W, padx=5)
 # checkbutton for calculating line-averaged density timetrace
 interf_neCalc_var           = tk.IntVar()
 interf_neCalc_checkbutton   = tk.Checkbutton(side_frame_inner, 
@@ -368,7 +381,7 @@ interf_neCalc_checkbutton   = tk.Checkbutton(side_frame_inner,
                                                  timetraces_options,
                                                  status_label)
                                             )
-interf_neCalc_checkbutton.grid(row=4, column=1, sticky=tk.W, padx=5)
+interf_neCalc_checkbutton.grid(row=5, column=1, sticky=tk.W, padx=5)
 # checkbutton for correction for offset at end
 interf_offsetCorr_var   = tk.IntVar()
 interf_offsetCorr_check = tk.Checkbutton(side_frame_inner,
@@ -381,7 +394,7 @@ interf_offsetCorr_check = tk.Checkbutton(side_frame_inner,
                                              timetraces_options,
                                              status_label)
                                          )
-interf_offsetCorr_check.grid(row=5, column=1, sticky=tk.W, padx=5)
+interf_offsetCorr_check.grid(row=6, column=1, sticky=tk.W, padx=5)
 # checkbutton for ingoing 8 GHz measured via Kasparek diode
 P8GHz_in_var    = tk.IntVar()
 P8GHz_in_check  = tk.Checkbutton(side_frame_inner,
@@ -394,7 +407,7 @@ P8GHz_in_check  = tk.Checkbutton(side_frame_inner,
                                     timetraces_options,
                                     status_label)
                                  )
-P8GHz_in_check.grid(row=6, column=1, sticky=tk.W, padx=5)
+P8GHz_in_check.grid(row=7, column=1, sticky=tk.W, padx=5)
 
 # checkbutton for including the Bolometer sum channel
 boloSum_var     = tk.IntVar()
@@ -408,7 +421,7 @@ boloSum_check   = tk.Checkbutton(side_frame_inner,
                                      timetraces_options,
                                      status_label)
                                  )
-boloSum_check.grid(row=7, column=1, sticky=tk.W, padx=5)
+boloSum_check.grid(row=8, column=1, sticky=tk.W, padx=5)
 
 
 
