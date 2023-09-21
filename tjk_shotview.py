@@ -149,7 +149,7 @@ def plot_timetraces(shot,
     chCfg['plot_BoloSum']   = ['Bolo_sum', np.nan, '', 
                                r'$P_\mathrm{rad}$ in $\mathrm{W}$']
     chCfg['plot_interf']    = ['Interferometer (Mueller)', 1, '1e17 m^-3', 
-                               r'$\bar{n}_e$ in $10^{17}\,\mathrm{m}^{-3}$']
+                               r'$\bar{n}_e$ in a.u.']
 
     n_rows      = n_traces
     n_cols      = 1
@@ -212,12 +212,16 @@ def plot_timetraces(shot,
                         timetrace_ne    *= 3.883/2.#e17
                     else:
                         timetrace_ne    *= 3.883#e17
+                    ylabel = r'$\bar{n}_e$ in $10^{17}\,\mathrm{m}^{-3}$'
 
             ax.plot(time, timetrace)
             ax.set_ylabel(ylabel)
 
-            plot_count  += 1
+            # plot shot number as title on top
+            if plot_count == 1:
+                ax.set_title('#{0}'.format(shot))
 
+            plot_count  += 1
 
     # add x-label only to bottom axes object
     ax.set_xlabel( 'time in s' )
