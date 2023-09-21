@@ -118,6 +118,13 @@ def plot_timetraces(shot,
     time    = tjk.get_trace(shot, fname_in=fname_data, chName='Zeit [ms]')
     time   *= 1e-3
 
+    # get number of timetraces to be plotted based on choice made by user
+    #n_traces    = np.sum( timetraces_options[
+
+
+
+
+
     # idea: use dictionary for each diagnostics data stored via tjk-monitor
     #       which contains channel name in tjk-monitor, conversion factor
     #       (if a single conversion factor can be applied), 
@@ -313,14 +320,14 @@ datapath_entry.grid(column=1, row=1,
 
 # dictionary for some optional data processing stuff
 timetraces_options  = {
-        'B0'                    : 1,
-        'interf'                : 1,
+        'plot_B0'               : 1,
+        'plot_interf'           : 1,
         'interf_drift_correct'  : 0,
         'interf_offset_correct' : 0,
         'interf_calc_ne'        : 0,
-        'P8GHz_in'              : 0,
-        'P2GHz_abs'             : 1,
-        'BoloSum'               : 0,
+        'plot_P8GHz_in'         : 0,
+        'plot_P2GHz_abs'        : 1,
+        'plot_BoloSum'          : 0,
         }
 # plot button (for time traces)
 plot_button = tk.Button(side_frame_inner,
@@ -338,7 +345,7 @@ plot_button.grid(row=2, columnspan=2, sticky=tk.W+tk.E, padx=5, pady=10)
 # some checkboxes to activate/deactivate certain timetraces and certain
 # data processing stuff
 # checkbutton for plotting timetrace of B0
-plot_B0_var                 = tk.IntVar(value=timetraces_options['B0'])
+plot_B0_var                 = tk.IntVar(value=timetraces_options['plot_B0'])
 plot_B0_checkbutton         = tk.Checkbutton(side_frame_inner, 
                                              text="include B0",
                                              variable=plot_B0_var,
@@ -349,13 +356,13 @@ plot_B0_checkbutton         = tk.Checkbutton(side_frame_inner,
                                              #fg=col_sideframe_font,    # this makes problems, tick seems to become invisible (?)
                                              command=lambda: checkbutton_clicked(
                                                  plot_B0_var,
-                                                 "B0",        # NOTE: must be same as dictionary key 
+                                                 "plot_B0",        # NOTE: must be same as dictionary key 
                                                  timetraces_options,
                                                  status_label)
                                             )
 plot_B0_checkbutton.grid(row=3, column=1, sticky=tk.W, padx=5)
 # checkbutton for plotting P_abs2.45GHz timetrace
-plot_P2GHzAbs_var           = tk.IntVar(value=timetraces_options['P2GHz_abs'])
+plot_P2GHzAbs_var           = tk.IntVar(value=timetraces_options['plot_P2GHz_abs'])
 plot_P2GHzAbs_checkbutton   = tk.Checkbutton(side_frame_inner, 
                                              text="include P_abs2.45GHz",
                                              variable=plot_P2GHzAbs_var,
@@ -363,13 +370,13 @@ plot_P2GHzAbs_checkbutton   = tk.Checkbutton(side_frame_inner,
                                              state=tk.NORMAL,
                                              command=lambda: checkbutton_clicked(
                                                  plot_P2GHzAbs_var,
-                                                 "P2GHz_abs",        # NOTE: must be same as dictionary key 
+                                                 "plot_P2GHz_abs",        # NOTE: must be same as dictionary key 
                                                  timetraces_options,
                                                  status_label)
                                             )
 plot_P2GHzAbs_checkbutton.grid(row=4, column=1, sticky=tk.W, padx=5)
 # checkbutton for plotting interferometer timetrace
-plot_interf_var             = tk.IntVar(value=timetraces_options['interf'])
+plot_interf_var             = tk.IntVar(value=timetraces_options['plot_interf'])
 plot_interf_checkbutton     = tk.Checkbutton(side_frame_inner, 
                                              text="include interferometer",
                                              variable=plot_interf_var,
@@ -377,7 +384,7 @@ plot_interf_checkbutton     = tk.Checkbutton(side_frame_inner,
                                              state=tk.NORMAL,
                                              command=lambda: checkbutton_clicked(
                                                  plot_interf_var,
-                                                 "interf",        # NOTE: must be same as dictionary key 
+                                                 "plot_interf",        # NOTE: must be same as dictionary key 
                                                  timetraces_options,
                                                  status_label)
                                             )
@@ -433,7 +440,7 @@ P8GHz_in_check  = tk.Checkbutton(side_frame_inner,
                                  state=tk.DISABLED,
                                  command=lambda: checkbutton_clicked(
                                     P8GHz_in_var,
-                                    "P8GHz_in",
+                                    "plot_P8GHz_in",
                                     timetraces_options,
                                     status_label)
                                  )
@@ -447,7 +454,7 @@ boloSum_check   = tk.Checkbutton(side_frame_inner,
                                  state=tk.DISABLED,
                                  command=lambda: checkbutton_clicked(
                                      boloSum_var,
-                                     "BoloSum",
+                                     "plot_BoloSum",
                                      timetraces_options,
                                      status_label)
                                  )
