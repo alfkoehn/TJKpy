@@ -186,7 +186,7 @@ def plot_timetraces(shot,
             elif key == 'plot_P2GHz_out':
                 timetrace   = tjk.calc_2GHzPower(timetrace_Pin2,  output='watt', direction='bw')
             elif key == 'plot_P8GHz_in':
-                timetrace   = tjk.calc_8GHzPower(timetrace,  direction='fw')
+                timetrace   = tjk.calc_8GHzPower(timetrace,  direction='fw')*1e-3
             elif key == 'plot_interf':
                 # correct for drift
                 # correct for offset
