@@ -207,6 +207,9 @@ def plot_timetraces(shot,
                     #       ==> new = old - ((offset_1-offset_0)/(jump_off-jump_on)*time + offset_0)
                     #       idea: do as with previous IDL version (look for min and max in derivative of interferometer)
                     #       as an easy check, include a button for marking the jumps in plot
+                if timetraces_options['interf_offset_correct']:
+                    offset_end      = np.mean(timetrace[(-1*n_pts_offset):])
+                    timetrace      += -1*offset_end 
                 if timetraces_options['interf_calc_ne']:
                     # TODO: for 'Interferometer (Mueller)' and 'Interferometer Phase' the
                     #       scaling factor is 3.883e17 until the damage and repair by e.ho
@@ -391,6 +394,19 @@ plot_P2GHzAbs_checkbutton   = tk.Checkbutton(side_frame_inner,
                                                  status_label)
                                             )
 plot_P2GHzAbs_checkbutton.grid(row=4, column=1, sticky=tk.W, padx=5)
+# checkbutton for ingoing 8 GHz measured via Kasparek diode
+P8GHz_in_var    = tk.IntVar()
+P8GHz_in_check  = tk.Checkbutton(side_frame_inner,
+                                 text="include P_in8GHz",
+                                 variable=P8GHz_in_var,
+                                 state=tk.NORMAL,
+                                 command=lambda: checkbutton_clicked(
+                                    P8GHz_in_var,
+                                    "plot_P8GHz_in",
+                                    timetraces_options,
+                                    status_label)
+                                 )
+P8GHz_in_check.grid(row=5, column=1, sticky=tk.W, padx=5)
 # checkbutton for plotting interferometer timetrace
 plot_interf_var             = tk.IntVar(value=timetraces_options['plot_interf'])
 plot_interf_checkbutton     = tk.Checkbutton(side_frame_inner, 
@@ -404,7 +420,7 @@ plot_interf_checkbutton     = tk.Checkbutton(side_frame_inner,
                                                  timetraces_options,
                                                  status_label)
                                             )
-plot_interf_checkbutton.grid(row=5, column=1, sticky=tk.W, padx=5)
+plot_interf_checkbutton.grid(row=6, column=1, sticky=tk.W, padx=5)
 # checkbutton for drift correction
 interf_drift_var            = tk.IntVar()
 interf_drift_checkbutton    = tk.Checkbutton(side_frame_inner, 
@@ -418,7 +434,7 @@ interf_drift_checkbutton    = tk.Checkbutton(side_frame_inner,
                                                  timetraces_options,
                                                  status_label)
                                             )
-interf_drift_checkbutton.grid(row=6, column=1, sticky=tk.W, padx=5)
+interf_drift_checkbutton.grid(row=7, column=1, sticky=tk.W, padx=5)
 # checkbutton for calculating line-averaged density timetrace
 interf_neCalc_var           = tk.IntVar()
 interf_neCalc_checkbutton   = tk.Checkbutton(side_frame_inner, 
@@ -434,34 +450,20 @@ interf_neCalc_checkbutton   = tk.Checkbutton(side_frame_inner,
                                                  timetraces_options,
                                                  status_label)
                                             )
-interf_neCalc_checkbutton.grid(row=7, column=1, sticky=tk.W, padx=5)
+interf_neCalc_checkbutton.grid(row=8, column=1, sticky=tk.W, padx=5)
 # checkbutton for correction for offset at end
 interf_offsetCorr_var   = tk.IntVar()
 interf_offsetCorr_check = tk.Checkbutton(side_frame_inner,
                                          text="correct offset",
                                          variable=interf_offsetCorr_var,
-                                         state=tk.DISABLED,
+                                         state=tk.NORMAL,
                                          command=lambda: checkbutton_clicked(
                                              interf_offsetCorr_var,
                                              "interf_offset_correct",
                                              timetraces_options,
                                              status_label)
                                          )
-interf_offsetCorr_check.grid(row=8, column=1, sticky=tk.W, padx=5)
-# checkbutton for ingoing 8 GHz measured via Kasparek diode
-P8GHz_in_var    = tk.IntVar()
-P8GHz_in_check  = tk.Checkbutton(side_frame_inner,
-                                 text="include P_in8GHz",
-                                 variable=P8GHz_in_var,
-                                 state=tk.NORMAL,
-                                 command=lambda: checkbutton_clicked(
-                                    P8GHz_in_var,
-                                    "plot_P8GHz_in",
-                                    timetraces_options,
-                                    status_label)
-                                 )
-P8GHz_in_check.grid(row=9, column=1, sticky=tk.W, padx=5)
-
+interf_offsetCorr_check.grid(row=9, column=1, sticky=tk.W, padx=5)
 # checkbutton for including the Bolometer sum channel
 boloSum_var     = tk.IntVar()
 boloSum_check   = tk.Checkbutton(side_frame_inner,
