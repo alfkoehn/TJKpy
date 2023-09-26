@@ -10,6 +10,7 @@ bla
 """
 
 
+from pathlib import Path
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 import numpy as np
@@ -79,7 +80,8 @@ def get_tjkmonitor_datapath(shot):
     else:
         shot_path   = tjk.get_shot_path(shot)
         if isinstance(shot_path, str):
-            shot_path += 'interferometer/'
+            shot_path = Path(shot_path + "interferometer/")
+            #shot_path += 'interferometer/'
             return shot_path
         else:
             return errValue
