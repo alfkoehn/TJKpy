@@ -48,7 +48,7 @@ def validate_shotnumber(shot, status_label, datapath_entry):
                     background=col_ok
                     )
             # update the field showing/setting the path to the data file
-            path2data = get_tjkmonitor_datapath(shot_entry.get())
+            path2data = str(get_tjkmonitor_datapath(shot_entry.get()))
             datapath_entry.delete(0,tk.END)
             datapath_entry.insert(0, path2data)
 
