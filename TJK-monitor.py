@@ -46,11 +46,13 @@ def get_shot_path( shot ):
                             '/data4/', 
                             '/data3/', 
                             '/data2/', 
-                            '/data1/' 
+                            '/data1/',
+                            'Z:/'       # for windows tjk-monitor PC in the lab
                           ]
 
     for prePath in possible_folders:
-        shot_path   = '{0}/shot{1:d}/'.format( prePath, shot )
+        #shot_path   = '{0}/shot{1:d}/'.format( prePath, shot )
+        shot_path   = pathlib.Path( prePath + '/shot' + str(shot) )
         if os.path.isdir(shot_path):
             break
 
