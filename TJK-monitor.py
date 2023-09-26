@@ -11,6 +11,7 @@ import argparse
 import matplotlib.pyplot as plt
 import numpy as np
 import os.path
+import pathlib                  # python 3.4+
 import re
 import socket
 
@@ -148,7 +149,9 @@ def get_header( shot, fname_in='', silent=False ):
 
     # read header of tjk-monitor (or tjk-multimeter, or whatever it might be called by now) file
     # filename of tjk-monitor(/-multimeter) file
-    if len(fname_in) == 0:
+    if isinstance(fname_in, pathlib.PurePath):
+        fname_data  = fname_in
+    elif len(fname_in) == 0:
         path_data   = get_shot_path( shot )
         # if shot path is not found, use local active folder
         if (path_data == -1):
@@ -261,7 +264,9 @@ def get_trace( shot, fname_in='', chName='', chNr=None, silent=False ):
         return errValue
 
     # filename of time trace file
-    if len(fname_in) == 0:
+    if isinstance(fname_in, pathlib.PurePath):
+        fname_data  = fname_in
+    elif len(fname_in) == 0:
         path_data   = get_shot_path( shot )
         # if shot path is not found, use local active folder
         if (path_data == -1):

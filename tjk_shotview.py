@@ -114,7 +114,8 @@ def plot_timetraces(shot,
         return
 
     shot        = int(shot)
-    fname_data  = "{0}/shot{1}.dat".format(datapath_entry.get(),shot)
+    #fname_data  = "{0}/shot{1}.dat".format(datapath_entry.get(),shot)
+    fname_data  = Path(datapath_entry.get() + '/shot'  + str(shot) + '.dat')
 
     # get time axis and scale it to seconds
     time    = tjk.get_trace(shot, fname_in=fname_data, chName='Zeit [ms]')
