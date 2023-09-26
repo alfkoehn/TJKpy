@@ -83,6 +83,8 @@ def get_tjkmonitor_datapath(shot):
             shot_path = Path(shot_path + "interferometer/")
             #shot_path += 'interferometer/'
             return shot_path
+        elif Path.exists(shot_path):
+            shot_path = shot_path / "interferometer/"
         else:
             return errValue
 
