@@ -358,6 +358,7 @@ timetraces_options  = {
         'interf_offset_correct' : 0,
         'interf_calc_ne'        : 0,
         'plot_BoloSum'          : 0,
+        'plot_p0'               : 0,
         }
 # plot button (for time traces)
 plot_button = tk.Button(side_frame_inner,
@@ -502,8 +503,19 @@ boloSum_check   = tk.Checkbutton(side_frame_inner,
                                      status_label)
                                  )
 boloSum_check.grid(row=11, column=1, sticky=tk.W, padx=5)
-
-
+# checkbutton for including the neutral gas pressure channel
+plot_p0_var     = tk.IntVar()
+plot_p0_check   = tk.Checkbutton(side_frame_inner, 
+                                 text="include p0",
+                                 variable=plot_p0_var,
+                                 state=tk.DISABLED,
+                                 command=lambda: checkbutton_clicked(
+                                     boloSum_var,
+                                     "plot_p0",
+                                     timetraces_options,
+                                     status_label)
+                                 )
+plot_p0_check.grid(row=12, column=1, sticky=tk.W, padx=5)
 
 # some information deduced from time traces
 # calculate line-averaged density as value obtained from plasma-off
