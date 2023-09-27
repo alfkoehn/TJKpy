@@ -276,8 +276,11 @@ root = tk.Tk()
 root.title("TJ-K show-view")
 
 path2data           = "/"
-col_sideframe       = "#4C2A85"
-col_sideframe_font  = "#FFF"
+
+# select some default colors
+col_sideframe       = "light gray"  #"#4C2A85"
+col_sideframe_font  = "black"
+col_chkbtn_select   = "white"
 
 # create a frame which will be used to enter shot number and the path
 # and also to display some information from the shot
@@ -335,7 +338,7 @@ shot_entry.grid(column=1, row=0,
 # optional user entry where shot-data is located, i.e. path to data*
 datapath_label  = tk.Label(side_frame_inner,
                            text="data path",
-                       bg=col_sideframe, fg="#FFF")
+                           bg=col_sideframe, fg=col_sideframe_font)
 datapath_label.grid(column=0, row=1, 
                     sticky="E",
                     padx=5, pady=5)
@@ -382,9 +385,10 @@ plot_B0_checkbutton         = tk.Checkbutton(side_frame_inner,
                                              variable=plot_B0_var,
                                              onvalue=1, offvalue=0,
                                              state=tk.NORMAL,
-                                             #bd=0,
-                                             #bg=col_sideframe, 
+                                             bd=0, highlightthickness=0,    # to fully remove border
+                                             bg=col_sideframe, 
                                              #fg=col_sideframe_font,    # this makes problems, tick seems to become invisible (?)
+                                             selectcolor=col_chkbtn_select,
                                              command=lambda: checkbutton_clicked(
                                                  plot_B0_var,
                                                  "plot_B0",        # NOTE: must be same as dictionary key 
@@ -399,6 +403,8 @@ plot_Tcoil_checkbutton      = tk.Checkbutton(side_frame_inner,
                                              variable=plot_Tcoil_var,
                                              onvalue=1, offvalue=0,
                                              state=tk.NORMAL,
+                                             bd=0, highlightthickness=0,    # to fully remove border
+                                             bg=col_sideframe, 
                                              command=lambda: checkbutton_clicked(
                                                  plot_Tcoil_var,
                                                  "plot_Tcoil",        # NOTE: must be same as dictionary key 
@@ -413,6 +419,8 @@ plot_P2GHzAbs_checkbutton   = tk.Checkbutton(side_frame_inner,
                                              variable=plot_P2GHzAbs_var,
                                              onvalue=1, offvalue=0,
                                              state=tk.NORMAL,
+                                             bd=0, highlightthickness=0,    # to fully remove border
+                                             bg=col_sideframe, 
                                              command=lambda: checkbutton_clicked(
                                                  plot_P2GHzAbs_var,
                                                  "plot_P2GHz_abs",        # NOTE: must be same as dictionary key 
@@ -426,6 +434,8 @@ P8GHz_in_check  = tk.Checkbutton(side_frame_inner,
                                  text="include P_in8GHz",
                                  variable=P8GHz_in_var,
                                  state=tk.NORMAL,
+                                 bd=0, highlightthickness=0,    # to fully remove border
+                                 bg=col_sideframe, 
                                  command=lambda: checkbutton_clicked(
                                     P8GHz_in_var,
                                     "plot_P8GHz_in",
@@ -440,6 +450,8 @@ plot_interf_checkbutton     = tk.Checkbutton(side_frame_inner,
                                              variable=plot_interf_var,
                                              onvalue=1, offvalue=0,
                                              state=tk.NORMAL,
+                                             bd=0, highlightthickness=0,    # to fully remove border
+                                             bg=col_sideframe, 
                                              command=lambda: checkbutton_clicked(
                                                  plot_interf_var,
                                                  "plot_interf",        # NOTE: must be same as dictionary key 
@@ -454,6 +466,8 @@ interf_drift_checkbutton    = tk.Checkbutton(side_frame_inner,
                                              variable=interf_drift_var,
                                              onvalue=1, offvalue=0,
                                              state=tk.DISABLED,
+                                             bd=0, highlightthickness=0,    # to fully remove border
+                                             bg=col_sideframe, 
                                              command=lambda: checkbutton_clicked(
                                                  interf_drift_var,
                                                  "interf_drift_correct",        # NOTE: must be same as dictionary key 
@@ -467,9 +481,8 @@ interf_neCalc_checkbutton   = tk.Checkbutton(side_frame_inner,
                                              text="calculate n_e",
                                              variable=interf_neCalc_var,
                                              onvalue=1, offvalue=0, 
-                                             #bd=0,
-                                             #bg=col_sideframe, 
-                                             #fg=col_sideframe_font,    # this makes problems, tick seems to become invisible (?)
+                                             bd=0, highlightthickness=0,    # to fully remove border
+                                             bg=col_sideframe, 
                                              command=lambda: checkbutton_clicked(
                                                  interf_neCalc_var,
                                                  "interf_calc_ne",        # NOTE: must be same as dictionary key 
@@ -483,6 +496,8 @@ interf_offsetCorr_check = tk.Checkbutton(side_frame_inner,
                                          text="correct offset",
                                          variable=interf_offsetCorr_var,
                                          state=tk.NORMAL,
+                                         bd=0, highlightthickness=0,    # to fully remove border
+                                         bg=col_sideframe, 
                                          command=lambda: checkbutton_clicked(
                                              interf_offsetCorr_var,
                                              "interf_offset_correct",
@@ -496,6 +511,8 @@ boloSum_check   = tk.Checkbutton(side_frame_inner,
                                  text="include Bolo_sum",
                                  variable=boloSum_var,
                                  state=tk.DISABLED,
+                                 bd=0, highlightthickness=0,    # to fully remove border
+                                 bg=col_sideframe, 
                                  command=lambda: checkbutton_clicked(
                                      boloSum_var,
                                      "plot_BoloSum",
@@ -509,6 +526,8 @@ plot_p0_check   = tk.Checkbutton(side_frame_inner,
                                  text="include p0",
                                  variable=plot_p0_var,
                                  state=tk.DISABLED,
+                                 bd=0, highlightthickness=0,    # to fully remove border
+                                 bg=col_sideframe, 
                                  command=lambda: checkbutton_clicked(
                                      boloSum_var,
                                      "plot_p0",
