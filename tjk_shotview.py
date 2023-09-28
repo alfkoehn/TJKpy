@@ -154,6 +154,8 @@ def plot_timetraces(shot,
                                r'$P_\mathrm{in}$ in $\mathrm{kW}$']
     chCfg['plot_BoloSum']   = ['Bolo_sum', np.nan, '', 
                                r'$P_\mathrm{rad}$ in $\mathrm{W}$']
+    chCfg['plot_p0']        = ['Pressure', np.nan, '', 
+                               r'$p_0$ in $\mathrm{mPa}$']
     if shot >= 13316:   # TODO: this number needs to be corrected to some lower shotnumber
         chCfg['plot_interf']    = ['Interferometer digital', 1, '1e17 m^-3', 
                                    r'$\bar{n}_e$ in a.u.']
@@ -193,6 +195,11 @@ def plot_timetraces(shot,
                 timetrace   = tjk.calc_2GHzPower(timetrace_Pin2,  output='watt', direction='bw')
             elif key == 'plot_P8GHz_in':
                 timetrace   = tjk.calc_8GHzPower(timetrace,  direction='fw')*1e-3
+            elif key == 'plot_p0':
+                # convert to mPa according to PKR261 manual
+                d           = 9.33
+                timetrace   = 10.**(1.667*timetrace-d)
+                timetrace  *= 1e3
             elif key == 'plot_interf':
                 # correct for drift
                 # correct for offset
@@ -506,11 +513,11 @@ boloSum_check.grid(row=11, column=1, sticky=tk.W, padx=5)
 # checkbutton for including the neutral gas pressure channel
 plot_p0_var     = tk.IntVar()
 plot_p0_check   = tk.Checkbutton(side_frame_inner, 
-                                 text="include p0",
+                                 text="include p_0",
                                  variable=plot_p0_var,
-                                 state=tk.DISABLED,
+                                 state=tk.NORMAL,
                                  command=lambda: checkbutton_clicked(
-                                     boloSum_var,
+                                     plot_p0_var,
                                      "plot_p0",
                                      timetraces_options,
                                      status_label)
