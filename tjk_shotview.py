@@ -172,7 +172,7 @@ def plot_timetraces(shot,
             ax  = fig.add_subplot(n_rows, n_cols, plot_count)
 
             # P_abs for 2.45 GHz is calculated using two timetraces
-            if key == 'plot_2GHz_abs':
+            if key == 'plot_P2GHz_abs':
                 timetrace_Pin2  = tjk.get_trace(shot, fname_in=fname_data, 
                                                 chName=chCfg['plot_P2GHz_in'][0])
                 timetrace_Pout2 = tjk.get_trace(shot, fname_in=fname_data, 
