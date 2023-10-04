@@ -120,7 +120,7 @@ def plot_timetraces(shot,
     fname_data  = Path(datapath_entry.get() + '/shot'  + str(shot) + '.dat')
 
     # get time axis and scale it to seconds
-    time    = tjk.get_trace(shot, fname_in=fname_data, chName='Zeit [ms]')
+    time    = tjk.get_trace(shot, fname_in=fname_data, chName='Zeit [ms]', silent=silent)
     time   *= 1e-3
 
     # get number of timetraces to be plotted based on choice made by user
