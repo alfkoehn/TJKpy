@@ -93,7 +93,8 @@ def get_tjkmonitor_datapath(shot):
 def plot_timetraces(shot, 
                     status_label, datapath_entry,
                     fig, canvas,
-                    timetraces_options
+                    timetraces_options,
+                    silent=True
                    ):
     #{{{
     """
@@ -168,21 +169,26 @@ def plot_timetraces(shot,
     plot_count  = 1
     for key in timetraces_options:
         if key.startswith('plot') and (timetraces_options[key] == 1):
-            print( key, timetraces_options[key] )
+            if not silent:
+                print( 'plot_timetraces: ', key, timetraces_options[key] )
+
             ax  = fig.add_subplot(n_rows, n_cols, plot_count)
 
             # P_abs for 2.45 GHz is calculated using two timetraces
             if key == 'plot_P2GHz_abs':
                 timetrace_Pin2  = tjk.get_trace(shot, fname_in=fname_data, 
-                                                chName=chCfg['plot_P2GHz_in'][0])
+                                                chName=chCfg['plot_P2GHz_in'][0], 
+                                                silent=silent)
                 timetrace_Pout2 = tjk.get_trace(shot, fname_in=fname_data, 
-                                                chName=chCfg['plot_P2GHz_out'][0])
+                                                chName=chCfg['plot_P2GHz_out'][0],
+                                                silent=silent)
                 timetrace       = ( tjk.calc_2GHzPower(timetrace_Pin2,  output='watt', direction='fw')
                                    -tjk.calc_2GHzPower(timetrace_Pout2, output='watt', direction='bw') )
             # default case
             else:
                 timetrace   = tjk.get_trace(shot, fname_in=fname_data, 
-                                            chName=chCfg[key][0])
+                                            chName=chCfg[key][0],
+                                            silent=silent)
 
             ylabel  = chCfg[key][3]
 
