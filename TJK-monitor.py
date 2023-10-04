@@ -284,7 +284,7 @@ def get_trace( shot, fname_in='', chName='', chNr=None, silent=False ):
 
     # get channel number if channel name is set
     if len(chName) > 0:
-        chNr = get_column_nr( shot, chName, fname_in=fname_in )
+        chNr = get_column_nr( shot, chName, fname_in=fname_in, silent=silent )
         if not silent:
             print( '    shot={0:d}, channel name={1}, channel number={2:d}'.format( shot, chName, chNr ) )
 
