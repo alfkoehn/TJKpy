@@ -635,7 +635,7 @@ def plot_timetraces( shot, fname_out='',
     data2plot   = ['B0', 'Pin2', 'neMueller', 'BoloSum']
 
     # get time axis and scale it to seconds
-    time    = get_trace(shot, chName='Zeit [ms]')
+    time    = get_trace(shot, chName='Zeit [ms]', silent=silent)
     time   *= 1e-3
 
     n_rows  = n_traces
