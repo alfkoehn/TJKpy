@@ -147,6 +147,8 @@ def plot_timetraces(shot,
                                r'$B_0$ in $\mathrm{mT}$']
     chCfg['plot_UB']        = ['U_B', 1, 'V', 
                                r'$U_B$ in $\mathrm{V}$']
+    chCfg['plot_optDiode']  = ['optDiode', 1, 'V', 
+                               r'optical diode in $\mathrm{V}$']
     chCfg['plot_Tcoil']     = ['Coil Temperature', 1, 'C', 
                                r'$T_\mathrm{coil}$ in $^\circ\mathrm{C}$']
     chCfg['plot_P2GHz_in']  = ['2 GHz Richtk. forward', np.nan, '', 
@@ -375,6 +377,7 @@ timetraces_options  = {
         'plot_Tcoil'            : 0,
         'plot_P2GHz_abs'        : 1,
         'plot_P8GHz_in'         : 0,
+        'plot_optDiode'         : 0,
         'plot_interf'           : 1,
         'interf_drift_correct'  : 0,
         'interf_offset_correct' : 0,
@@ -498,6 +501,21 @@ P8GHz_in_check  = tk.Checkbutton(side_frame_inner,
                                     status_label)
                                  )
 P8GHz_in_check.grid(row=8, column=1, sticky=tk.W, padx=5)
+# checkbutton for plotting optical diode
+plot_optDiode_var    = tk.IntVar()
+plot_optDiode_check  = tk.Checkbutton(side_frame_inner,
+                                 text="include optDiode",
+                                 variable=plot_optDiode_var,
+                                 state=tk.NORMAL,
+                                 bd=0, highlightthickness=0,    # to fully remove border
+                                 bg=col_sideframe, 
+                                 command=lambda: checkbutton_clicked(
+                                    plot_optDiode_var,
+                                    "plot_optDiode",
+                                    timetraces_options,
+                                    status_label)
+                                 )
+plot_optDiode_check.grid(row=9, column=1, sticky=tk.W, padx=5)
 # checkbutton for plotting interferometer timetrace
 plot_interf_var             = tk.IntVar(value=timetraces_options['plot_interf'])
 plot_interf_checkbutton     = tk.Checkbutton(side_frame_inner, 
@@ -513,7 +531,7 @@ plot_interf_checkbutton     = tk.Checkbutton(side_frame_inner,
                                                  timetraces_options,
                                                  status_label)
                                             )
-plot_interf_checkbutton.grid(row=9, column=1, sticky=tk.W, padx=5)
+plot_interf_checkbutton.grid(row=10, column=1, sticky=tk.W, padx=5)
 # checkbutton for drift correction
 interf_drift_var            = tk.IntVar()
 interf_drift_checkbutton    = tk.Checkbutton(side_frame_inner, 
@@ -529,7 +547,7 @@ interf_drift_checkbutton    = tk.Checkbutton(side_frame_inner,
                                                  timetraces_options,
                                                  status_label)
                                             )
-interf_drift_checkbutton.grid(row=10, column=1, sticky=tk.W, padx=5)
+interf_drift_checkbutton.grid(row=11, column=1, sticky=tk.W, padx=5)
 # checkbutton for calculating line-averaged density timetrace
 interf_neCalc_var           = tk.IntVar()
 interf_neCalc_checkbutton   = tk.Checkbutton(side_frame_inner, 
@@ -544,7 +562,7 @@ interf_neCalc_checkbutton   = tk.Checkbutton(side_frame_inner,
                                                  timetraces_options,
                                                  status_label)
                                             )
-interf_neCalc_checkbutton.grid(row=11, column=1, sticky=tk.W, padx=5)
+interf_neCalc_checkbutton.grid(row=12, column=1, sticky=tk.W, padx=5)
 # checkbutton for correction for offset at end
 interf_offsetCorr_var   = tk.IntVar()
 interf_offsetCorr_check = tk.Checkbutton(side_frame_inner,
@@ -559,7 +577,7 @@ interf_offsetCorr_check = tk.Checkbutton(side_frame_inner,
                                              timetraces_options,
                                              status_label)
                                          )
-interf_offsetCorr_check.grid(row=12, column=1, sticky=tk.W, padx=5)
+interf_offsetCorr_check.grid(row=13, column=1, sticky=tk.W, padx=5)
 # checkbutton for including the Bolometer sum channel
 boloSum_var     = tk.IntVar()
 boloSum_check   = tk.Checkbutton(side_frame_inner,
@@ -574,7 +592,7 @@ boloSum_check   = tk.Checkbutton(side_frame_inner,
                                      timetraces_options,
                                      status_label)
                                  )
-boloSum_check.grid(row=13, column=1, sticky=tk.W, padx=5)
+boloSum_check.grid(row=14, column=1, sticky=tk.W, padx=5)
 # checkbutton for including the neutral gas pressure channel
 plot_p0_var     = tk.IntVar()
 plot_p0_check   = tk.Checkbutton(side_frame_inner, 
@@ -589,7 +607,7 @@ plot_p0_check   = tk.Checkbutton(side_frame_inner,
                                      timetraces_options,
                                      status_label)
                                  )
-plot_p0_check.grid(row=14, column=1, sticky=tk.W, padx=5)
+plot_p0_check.grid(row=15, column=1, sticky=tk.W, padx=5)
 
 # some information deduced from time traces
 # calculate line-averaged density as value obtained from plasma-off
