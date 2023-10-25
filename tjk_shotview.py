@@ -141,8 +141,12 @@ def plot_timetraces(shot,
     #   --> this should probably be changed somehow in a future version
     #       as it is errorprone this way
     chCfg   = {}
+    chCfg['plot_Ihel']      = ['I_Bh', 1, 'A', 
+                               r'$I_\mathrm{hel}$ in $\mathrm{A}$']
     chCfg['plot_B0']        = ['I_Bh', 0.24, 'mT', 
                                r'$B_0$ in $\mathrm{mT}$']
+    chCfg['plot_UB']        = ['U_B', 1, 'V', 
+                               r'$U_B$ in $\mathrm{V}$']
     chCfg['plot_Tcoil']     = ['Coil Temperature', 1, 'C', 
                                r'$T_\mathrm{coil}$ in $^\circ\mathrm{C}$']
     chCfg['plot_P2GHz_in']  = ['2 GHz Richtk. forward', np.nan, '', 
@@ -365,7 +369,9 @@ datapath_entry.grid(column=1, row=1,
 
 # dictionary for some optional data processing stuff
 timetraces_options  = {
+        'plot_Ihel'             : 0,
         'plot_B0'               : 1,
+        'plot_UB'               : 0,
         'plot_Tcoil'            : 0,
         'plot_P2GHz_abs'        : 1,
         'plot_P8GHz_in'         : 0,
@@ -391,6 +397,24 @@ plot_button.grid(row=2, columnspan=2, sticky=tk.W+tk.E, padx=5, pady=10)
 
 # some checkboxes to activate/deactivate certain timetraces and certain
 # data processing stuff
+# checkbutton for plotting timetrace of I_hel
+plot_Ihel_var               = tk.IntVar(value=timetraces_options['plot_Ihel'])
+plot_Ihel_checkbutton       = tk.Checkbutton(side_frame_inner, 
+                                             text="include I_hel",
+                                             variable=plot_Ihel_var,
+                                             onvalue=1, offvalue=0,
+                                             state=tk.NORMAL,
+                                             bd=0, highlightthickness=0,    # to fully remove border
+                                             bg=col_sideframe, 
+                                             #fg=col_sideframe_font,    # this makes problems, tick seems to become invisible (?)
+                                             selectcolor=col_chkbtn_select,
+                                             command=lambda: checkbutton_clicked(
+                                                 plot_Ihel_var,
+                                                 "plot_Ihel",        # NOTE: must be same as dictionary key 
+                                                 timetraces_options,
+                                                 status_label)
+                                            )
+plot_Ihel_checkbutton.grid(row=3, column=1, sticky=tk.W, padx=5)
 # checkbutton for plotting timetrace of B0
 plot_B0_var                 = tk.IntVar(value=timetraces_options['plot_B0'])
 plot_B0_checkbutton         = tk.Checkbutton(side_frame_inner, 
@@ -408,7 +432,25 @@ plot_B0_checkbutton         = tk.Checkbutton(side_frame_inner,
                                                  timetraces_options,
                                                  status_label)
                                             )
-plot_B0_checkbutton.grid(row=3, column=1, sticky=tk.W, padx=5)
+plot_B0_checkbutton.grid(row=4, column=1, sticky=tk.W, padx=5)
+# checkbutton for plotting timetrace of U_B
+plot_UB_var                 = tk.IntVar(value=timetraces_options['plot_UB'])
+plot_UB_checkbutton         = tk.Checkbutton(side_frame_inner, 
+                                             text="include UB",
+                                             variable=plot_UB_var,
+                                             onvalue=1, offvalue=0,
+                                             state=tk.NORMAL,
+                                             bd=0, highlightthickness=0,    # to fully remove border
+                                             bg=col_sideframe, 
+                                             #fg=col_sideframe_font,    # this makes problems, tick seems to become invisible (?)
+                                             selectcolor=col_chkbtn_select,
+                                             command=lambda: checkbutton_clicked(
+                                                 plot_UB_var,
+                                                 "plot_UB",        # NOTE: must be same as dictionary key 
+                                                 timetraces_options,
+                                                 status_label)
+                                            )
+plot_UB_checkbutton.grid(row=5, column=1, sticky=tk.W, padx=5)
 # checkbutton for plotting timetrace of T_coil
 plot_Tcoil_var              = tk.IntVar(value=timetraces_options['plot_Tcoil'])
 plot_Tcoil_checkbutton      = tk.Checkbutton(side_frame_inner, 
@@ -424,7 +466,7 @@ plot_Tcoil_checkbutton      = tk.Checkbutton(side_frame_inner,
                                                  timetraces_options,
                                                  status_label)
                                             )
-plot_Tcoil_checkbutton.grid(row=4, column=1, sticky=tk.W, padx=5)
+plot_Tcoil_checkbutton.grid(row=6, column=1, sticky=tk.W, padx=5)
 # checkbutton for plotting P_abs2.45GHz timetrace
 plot_P2GHzAbs_var           = tk.IntVar(value=timetraces_options['plot_P2GHz_abs'])
 plot_P2GHzAbs_checkbutton   = tk.Checkbutton(side_frame_inner, 
@@ -440,7 +482,7 @@ plot_P2GHzAbs_checkbutton   = tk.Checkbutton(side_frame_inner,
                                                  timetraces_options,
                                                  status_label)
                                             )
-plot_P2GHzAbs_checkbutton.grid(row=5, column=1, sticky=tk.W, padx=5)
+plot_P2GHzAbs_checkbutton.grid(row=7, column=1, sticky=tk.W, padx=5)
 # checkbutton for ingoing 8 GHz measured via Kasparek diode
 P8GHz_in_var    = tk.IntVar()
 P8GHz_in_check  = tk.Checkbutton(side_frame_inner,
@@ -455,7 +497,7 @@ P8GHz_in_check  = tk.Checkbutton(side_frame_inner,
                                     timetraces_options,
                                     status_label)
                                  )
-P8GHz_in_check.grid(row=6, column=1, sticky=tk.W, padx=5)
+P8GHz_in_check.grid(row=8, column=1, sticky=tk.W, padx=5)
 # checkbutton for plotting interferometer timetrace
 plot_interf_var             = tk.IntVar(value=timetraces_options['plot_interf'])
 plot_interf_checkbutton     = tk.Checkbutton(side_frame_inner, 
@@ -471,7 +513,7 @@ plot_interf_checkbutton     = tk.Checkbutton(side_frame_inner,
                                                  timetraces_options,
                                                  status_label)
                                             )
-plot_interf_checkbutton.grid(row=7, column=1, sticky=tk.W, padx=5)
+plot_interf_checkbutton.grid(row=9, column=1, sticky=tk.W, padx=5)
 # checkbutton for drift correction
 interf_drift_var            = tk.IntVar()
 interf_drift_checkbutton    = tk.Checkbutton(side_frame_inner, 
@@ -487,7 +529,7 @@ interf_drift_checkbutton    = tk.Checkbutton(side_frame_inner,
                                                  timetraces_options,
                                                  status_label)
                                             )
-interf_drift_checkbutton.grid(row=8, column=1, sticky=tk.W, padx=5)
+interf_drift_checkbutton.grid(row=10, column=1, sticky=tk.W, padx=5)
 # checkbutton for calculating line-averaged density timetrace
 interf_neCalc_var           = tk.IntVar()
 interf_neCalc_checkbutton   = tk.Checkbutton(side_frame_inner, 
@@ -502,7 +544,7 @@ interf_neCalc_checkbutton   = tk.Checkbutton(side_frame_inner,
                                                  timetraces_options,
                                                  status_label)
                                             )
-interf_neCalc_checkbutton.grid(row=9, column=1, sticky=tk.W, padx=5)
+interf_neCalc_checkbutton.grid(row=11, column=1, sticky=tk.W, padx=5)
 # checkbutton for correction for offset at end
 interf_offsetCorr_var   = tk.IntVar()
 interf_offsetCorr_check = tk.Checkbutton(side_frame_inner,
@@ -517,7 +559,7 @@ interf_offsetCorr_check = tk.Checkbutton(side_frame_inner,
                                              timetraces_options,
                                              status_label)
                                          )
-interf_offsetCorr_check.grid(row=10, column=1, sticky=tk.W, padx=5)
+interf_offsetCorr_check.grid(row=12, column=1, sticky=tk.W, padx=5)
 # checkbutton for including the Bolometer sum channel
 boloSum_var     = tk.IntVar()
 boloSum_check   = tk.Checkbutton(side_frame_inner,
@@ -532,7 +574,7 @@ boloSum_check   = tk.Checkbutton(side_frame_inner,
                                      timetraces_options,
                                      status_label)
                                  )
-boloSum_check.grid(row=11, column=1, sticky=tk.W, padx=5)
+boloSum_check.grid(row=13, column=1, sticky=tk.W, padx=5)
 # checkbutton for including the neutral gas pressure channel
 plot_p0_var     = tk.IntVar()
 plot_p0_check   = tk.Checkbutton(side_frame_inner, 
@@ -547,7 +589,7 @@ plot_p0_check   = tk.Checkbutton(side_frame_inner,
                                      timetraces_options,
                                      status_label)
                                  )
-plot_p0_check.grid(row=12, column=1, sticky=tk.W, padx=5)
+plot_p0_check.grid(row=14, column=1, sticky=tk.W, padx=5)
 
 # some information deduced from time traces
 # calculate line-averaged density as value obtained from plasma-off
